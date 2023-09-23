@@ -16,6 +16,10 @@ const prisma = new PrismaClient();
 
 export const config = {
     adapter: PrismaAdapter(prisma),
+    theme: {
+        logo: "/lotus-flower.png",
+        colorScheme: "light",
+    },
 
     providers: [
         GitHub({

@@ -23,12 +23,12 @@ export default async function RootLayout({
             <body className={inter.className}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="dark"
+                    defaultTheme="light"
                     enableSystem
                     disableTransitionOnChange
                 >
                     <SessionProvider session={session}>
-                        <main className="mx-auto max-w-5xl gap-2 py-2">
+                        <main className="@container mx-auto max-w-5xl gap-2 p-4">
                             <NavMenu />
                             {children}
                         </main>
