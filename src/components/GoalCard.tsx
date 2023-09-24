@@ -30,8 +30,9 @@ export default function GoalCard() {
                     >
                         <MinusIcon />
                     </Button>
-                    <div className="flex flex-col justify-center items-center py-4 gap-2">
-                        <span className="text-4xl font-bold">{goal}</span>
+
+                    <div className="flex flex-col justify-center items-center gap-2">
+                        <span className="text-2xl font-bold">{goal}</span>
                         <span className="font-thin text-xs uppercase">
                             Minutes meditation per day
                         </span>

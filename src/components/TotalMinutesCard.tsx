@@ -22,8 +22,8 @@ export default function TotalMinutesCard() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="py-4">
-                    <p className="text-4xl font-bold">130 min</p>
+                <div>
+                    <p className="text-2xl font-bold">130 min</p>
                     <p className="uppercase font-thin text-xs">
                         Av. 16 minutes per day.
                     </p>

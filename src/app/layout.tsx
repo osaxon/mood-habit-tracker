@@ -2,10 +2,11 @@ import NavMenu from "@/components/NavMenu";
 import SessionProvider from "@/components/SessionProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { auth } from "./lib/authconfig";
 const inter = Inter({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -28,7 +29,7 @@ export default async function RootLayout({
                     disableTransitionOnChange
                 >
                     <SessionProvider session={session}>
-                        <main className="@container mx-auto max-w-5xl gap-2 p-4">
+                        <main className="@container mx-auto max-w-7xl gap-2 p-4 space-y-4">
                             <NavMenu />
                             {children}
                         </main>

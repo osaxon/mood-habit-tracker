@@ -1,15 +1,18 @@
 "use client";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { Space_Grotesk } from "next/font/google";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
+
+import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
@@ -27,11 +30,8 @@ const AuthButton = () => {
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button
-                        variant="ghost"
-                        className="relative rounded-full h-8 w-8"
-                    >
-                        <Avatar className="h-8 w-8">
+                    <Button variant="ghost" className="relative rounded-full">
+                        <Avatar>
                             <AvatarImage src={session.user?.image ?? ""} />
                             <AvatarFallback>
                                 {getUserInitials(session.user?.name ?? "")}
@@ -50,23 +50,6 @@ const AuthButton = () => {
                             </p>
                         </div>
                     </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                            Profile
-                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            Billing
-                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            Settings
-                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>New Team</DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() =>
                             signOut({
@@ -100,9 +83,20 @@ export default function NavMenu() {
     const pathname = usePathname();
 
     return (
-        <div className="flex w-full justify-between">
-            <h1 className="text-3xl font-bold">Mood Tracker</h1>
+        <header className="flex w-full justify-between items-center">
+            <div className="flex gap-2 items-center">
+                <Image
+                    alt="brand logo"
+                    width={48}
+                    height={48}
+                    src="/lotus-flower.png"
+                />
+                <p className={cn("text-4xl font-bold", spaceGrotesk.className)}>
+                    Mooodz
+                </p>
+            </div>
+
             <AuthButton />
-        </div>
+        </header>
     );
 }
