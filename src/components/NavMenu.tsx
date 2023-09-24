@@ -92,7 +92,7 @@ export default function NavMenu() {
                     src="/lotus-flower.png"
                 />
                 <p className={cn("text-4xl font-bold", spaceGrotesk.className)}>
-                    Mooodz
+                    MoOodz
                 </p>
             </div>
 

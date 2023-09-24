@@ -1,0 +1,24 @@
+import {
+    PrismaClient,
+    HabitDefinition,
+    HabitInstance,
+    User,
+    type Prisma,
+} from "@prisma/client";
+
+const globalForPrisma = globalThis as unknown as {
+    prisma: PrismaClient | undefined;
+};
+
+export const prisma =
+    globalForPrisma.prisma ??
+    new PrismaClient({
+        log:
+            process.env.NODE_ENV === "development"
+                ? ["error", "warn"]
+                : ["error"],
+    });
+
+export type UserWithData = Prisma.UserGetPayload<{
+    include: { habitDefinitions: true };
+}>;

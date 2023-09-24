@@ -38,6 +38,12 @@ export const config = {
             from: process.env.EMAIL_FROM,
         }),
     ],
+    callbacks: {
+        async session({ session, user, token }) {
+            session.user.id = user.id;
+            return session;
+        },
+    },
 } satisfies NextAuthConfig;
 
 // Helper function to get session without passing config every time

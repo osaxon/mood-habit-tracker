@@ -41,17 +41,6 @@ model Session {
     @@index([userId])
 }
 
-model User {
-    id              String            @id @default(cuid())
-    name            String?
-    email           String?           @unique
-    emailVerified   DateTime?
-    image           String?
-    accounts        Account[]
-    sessions        Session[]
-    HabitDefinition HabitDefinition[]
-}
-
 model VerificationToken {
     identifier String
     token      String   @unique
@@ -60,12 +49,44 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+
+    habitInstances   HabitInstance[]
+    habitDefinitions HabitDefinition[]
+}
+
 model HabitDefinition {
-    id        Int      @id @default(autoincrement())
-    habitName String
-    user      User     @relation(fields: [userId], references: [id])
-    createdAt DateTime @default(now())
-    userId    String
+    id             String          @id @default(cuid())
+    habitName      String
+    dailyTarget    Int
+    targetUnit     TargetUnit
+    createdAt      DateTime        @default(now())
+    users          User[]
+    habitInstances HabitInstance[]
+}
+
+model HabitInstance {
+    id                String          @id @default(cuid())
+    completionDate    DateTime
+    amountCompleted   Float
+    habitDefinition   HabitDefinition @relation(fields: [habitDefinitionId], references: [id])
+    habitDefinitionId String
+    userId            String
+    user              User            @relation(fields: [userId], references: [id])
 
     @@index([userId])
+    @@index([habitDefinitionId])
+}
+
+enum TargetUnit {
+    MINUTES
+    MILLILETERS
+    GRAMS
 }
