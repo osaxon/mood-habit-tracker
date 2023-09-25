@@ -58,35 +58,70 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    habitInstances   HabitInstance[]
-    habitDefinitions HabitDefinition[]
+    // the habits selected by a user to track on their profile
+    habitInstances HabitInstance[]
+
+    // the individual activity records
+    habitRecords UserHabitRecord[]
 }
 
+// Pre-defined Habits for users to select
 model HabitDefinition {
     id             String          @id @default(cuid())
     habitName      String
-    dailyTarget    Int
-    targetUnit     TargetUnit
     createdAt      DateTime        @default(now())
-    users          User[]
     habitInstances HabitInstance[]
 }
 
+// One of these will be created when a user selects a habit
 model HabitInstance {
     id                String          @id @default(cuid())
-    completionDate    DateTime
-    amountCompleted   Float
+    active            Boolean         @default(true)
     habitDefinition   HabitDefinition @relation(fields: [habitDefinitionId], references: [id])
     habitDefinitionId String
     userId            String
     user              User            @relation(fields: [userId], references: [id])
 
+    target      Float
+    targetUnit  TargetUnit
+    targetFreq  TargetFrequency @default(Daily)
+    completed   Boolean         @default(false)
+    completedAt DateTime?
+
+    records UserHabitRecord[]
+
     @@index([userId])
     @@index([habitDefinitionId])
 }
 
+// The activity log for users habits
+model UserHabitRecord {
+    id    String @id @default(cuid())
+    value Float
+
+    habitId String
+    habit   HabitInstance @relation(fields: [habitId], references: [id])
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    createdAt DateTime
+
+    @@index([userId])
+    @@index([habitId])
+}
+
 enum TargetUnit {
-    MINUTES
-    MILLILETERS
-    GRAMS
+    Minutes
+    Hours
+    Days
+    Litres
+    Number
+}
+
+enum TargetFrequency {
+    Daily
+    Weekly
+    Monthly
+    Annually
 }

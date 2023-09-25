@@ -1,5 +1,5 @@
 import { auth } from "@/app/lib/authconfig";
-import UserHabits from "@/components/UserHabits";
+import Activities from "@/components/Activities";
 import { cn } from "@/lib/utils";
 import { Space_Grotesk } from "next/font/google";
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
@@ -12,7 +12,9 @@ export default async function Page() {
             <h2 className={cn("font-bold", spaceGrotesk.className)}>
                 Activities
             </h2>
-            <UserHabits userId={session?.user.id as string} />
+            <div className="grid @lg:grid-cols-2 grid-cols-1 gap-4">
+                <Activities />
+            </div>
         </section>
     );
 }

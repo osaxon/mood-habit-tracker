@@ -1,11 +1,16 @@
 "use server";
 
-import { UserWithData, prisma } from "./lib/prisma";
+import { z } from "zod";
+import { TargetUnit } from "@prisma/client";
+import { prisma } from "./lib/prisma";
+
+import { addHabitSchema } from "./lib/formSchemas";
+
+type AddHabitInstanceInputs = z.infer<typeof addHabitSchema>;
 
 export async function getHabitDefinitions() {
     const data = await prisma.habitDefinition.findMany({
         take: 100,
-        include: { users: true },
     });
     return data;
 }
@@ -13,7 +18,18 @@ export async function getHabitDefinitions() {
 export async function getUserDashboardData({ id }: { id: string }) {
     const data = await prisma.user.findUnique({
         where: { id },
-        include: { habitDefinitions: true, habitInstances: true },
+        include: { habitInstances: true },
     });
-    return data as UserWithData;
+    return data;
+}
+
+export async function getUsersHabits({ userId }: { userId: string }) {
+    const data = await prisma.habitInstance.findMany({ where: { userId } });
+    return data;
+}
+
+export async function addHabitInstancd(data: AddHabitInstanceInputs) {
+    const result = addHabitSchema.safeParse(data);
+
+    return result;
 }

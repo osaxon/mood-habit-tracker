@@ -18,7 +18,3 @@ export const prisma =
                 ? ["error", "warn"]
                 : ["error"],
     });
-
-export type UserWithData = Prisma.UserGetPayload<{
-    include: { habitDefinitions: true };
-}>;

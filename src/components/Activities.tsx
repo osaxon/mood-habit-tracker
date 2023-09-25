@@ -1,12 +1,14 @@
-"use client";
+import { getHabitDefinitions } from "@/app/actions";
+import HabitDefCard from "./HabitDefCard";
 
-import { TabsContent } from "./ui/tabs";
-
-export default function Activities() {
+export default async function Activities() {
+    const habitDefitions = await getHabitDefinitions();
     return (
-        <TabsContent className="@container" value="activities">
-            <h2 className="py-6">Activities</h2>
-            <div className="grid @lg:grid-cols-2 gap-2"></div>
-        </TabsContent>
+        <div className="grid @lg:grid-cols-2 grid-cols-1 gap-4">
+            {habitDefitions &&
+                habitDefitions.map((habit) => (
+                    <HabitDefCard key={habit.id} habitDefinition={habit} />
+                ))}
+        </div>
     );
 }
