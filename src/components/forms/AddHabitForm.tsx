@@ -1,11 +1,10 @@
 "use client";
-
+import { addHabitInstance } from "@/app/actions";
 import { addHabitSchema } from "@/app/lib/formSchemas";
 import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -13,10 +12,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
+    const router = useRouter();
     // 1. Define your form.
     const form = useForm<z.infer<typeof addHabitSchema>>({
         resolver: zodResolver(addHabitSchema),
@@ -27,10 +28,15 @@ export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
     });
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof addHabitSchema>) {
+    async function onSubmit(values: z.infer<typeof addHabitSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values);
+        const data = await addHabitInstance(values);
+        const { result, success, error } = data;
+        if (success) {
+            form.reset();
+            router.replace("/dashboard");
+        }
     }
 
     return (
@@ -45,9 +51,6 @@ export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
                             <FormControl>
                                 <Input type="number" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -61,9 +64,20 @@ export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
                             <FormControl>
                                 <Input type="string" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="targetFreq"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Frequency</FormLabel>
+                            <FormControl>
+                                <Input type="string" {...field} />
+                            </FormControl>
+
                             <FormMessage />
                         </FormItem>
                     )}
@@ -77,9 +91,6 @@ export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
                             <FormControl>
                                 <Input type="string" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -93,9 +104,6 @@ export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
                             <FormControl>
                                 <Input type="string" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
