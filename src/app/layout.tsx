@@ -21,26 +21,21 @@ export default async function RootLayout({
     const session = await auth();
     return (
         <html lang="en">
-            <body
-                style={{
-                    backgroundImage: 'url("/bbblurry.svg")',
-                    backgroundSize: "cover",
-                }}
-            >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="light"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <SessionProvider session={session}>
-                        <main className="@container mx-auto max-w-7xl gap-2 p-4 space-y-4">
-                            <NavMenu />
+            <SessionProvider session={session}>
+                <body className="w-full overflow-x-hidden">
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="light"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <NavMenu />
+                        <main className="@container gap-2 min-h-screen m-large">
                             {children}
                         </main>
-                    </SessionProvider>
-                </ThemeProvider>
-            </body>
+                    </ThemeProvider>
+                </body>
+            </SessionProvider>
         </html>
     );
 }

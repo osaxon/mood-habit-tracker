@@ -17,7 +17,7 @@ export default async function Page() {
     });
 
     return (
-        <section className="@container bg-secondary p-4 w-full">
+        <section className="@container p-4 w-full">
             <div className="grid @lg:grid-cols-2 grid-cols-1 gap-4">
                 {habitInstances &&
                     habitInstances.map((habit) => (

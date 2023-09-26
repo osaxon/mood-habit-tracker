@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 import { cn } from "@/libs/utils";
+import { Session } from "next-auth";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import {
@@ -23,83 +24,63 @@ function getUserInitials(name: string) {
     return `${first.charAt(0)}${last.charAt(0)}`;
 }
 
-const AuthButton = () => {
-    const { data: session } = useSession();
+const UserMenu = ({ session }: { session: Session }) => {
     const pathname = usePathname();
 
-    console.log(pathname);
-
-    if (session) {
-        return (
-            <div className="flex items-center gap-2">
-                {pathname === "/" && (
-                    <Link href="/dashboard">
-                        <Button variant="default">Your Dashboard</Button>
-                    </Link>
-                )}
-
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            className="relative rounded-full"
-                        >
-                            <Avatar>
-                                <AvatarImage src={session.user?.image ?? ""} />
-                                <AvatarFallback>
-                                    {getUserInitials(session.user?.name ?? "")}
-                                </AvatarFallback>
-                            </Avatar>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        className="w-56"
-                        align="end"
-                        forceMount
-                    >
-                        <DropdownMenuLabel className="font-normal">
-                            <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium leading-none">
-                                    shadcn
-                                </p>
-                                <p className="text-xs leading-none text-muted-foreground">
-                                    m@example.com
-                                </p>
-                            </div>
-                        </DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() =>
-                                signOut({
-                                    callbackUrl: `${window.location.origin}`,
-                                })
-                            }
-                        >
-                            Log out
-                            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-        );
-    }
-
     return (
-        <Button
-            onClick={() =>
-                signIn(undefined, {
-                    callbackUrl: `${window.location.origin}/dashboard`,
-                })
-            }
-            variant="default"
-        >
-            Log In
-        </Button>
+        <div className="flex items-center gap-4">
+            {pathname === "/" && (
+                <Link href="/dashboard">
+                    <Button variant="outline">Your Dashboard</Button>
+                </Link>
+            )}
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="relative border rounded-full"
+                    >
+                        <Avatar>
+                            <AvatarImage src={session.user?.image ?? ""} />
+                            <AvatarFallback>
+                                {getUserInitials(session.user?.name ?? "")}
+                            </AvatarFallback>
+                        </Avatar>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none">
+                                shadcn
+                            </p>
+                            <p className="text-xs leading-none text-muted-foreground">
+                                m@example.com
+                            </p>
+                        </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem
+                        onClick={() =>
+                            signOut({
+                                callbackUrl: `${window.location.origin}`,
+                            })
+                        }
+                    >
+                        Log out
+                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
     );
 };
 
 export default function NavMenu() {
+    const { data: session } = useSession();
+
     return (
-        <header className="flex w-full justify-between items-center">
+        <div className="flex w-full p-large py-4 justify-between items-center border-b border-muted-foreground">
             <div className="flex gap-2 items-center">
                 <Image
                     alt="brand logo"
@@ -108,11 +89,24 @@ export default function NavMenu() {
                     src="/lotus-flower.png"
                 />
                 <p className={cn("text-4xl font-bold", spaceGrotesk.className)}>
-                    MoOodz
+                    {`[Hab:It]`}
                 </p>
             </div>
 
-            <AuthButton />
-        </header>
+            {session && session.user ? (
+                <UserMenu session={session} />
+            ) : (
+                <Button
+                    onClick={() =>
+                        signIn(undefined, {
+                            callbackUrl: `${window.location.origin}/dashboard`,
+                        })
+                    }
+                    variant="default"
+                >
+                    Log In
+                </Button>
+            )}
+        </div>
     );
 }

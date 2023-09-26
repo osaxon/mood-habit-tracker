@@ -17,11 +17,9 @@ export default async function DashboardLayout({
 }) {
     const session = await auth();
     return (
-        <>
-            <div className="flex min-h-screen">
-                <Sidebar />
-                {children}
-            </div>
-        </>
+        <div className="flex items-stretch">
+            <Sidebar />
+            {children}
+        </div>
     );
 }
