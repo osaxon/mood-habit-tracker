@@ -8,3 +8,12 @@ export const addHabitSchema = z.object({
     targetUnit: z.nativeEnum(TargetUnit),
     targetFreq: z.nativeEnum(TargetFrequency),
 });
+
+export const addHabitRecordSchema = z.object({
+    value: z.number(),
+    habitInstanceId: z.string(),
+    userId: z.string(),
+});
+
+export type AddHabitInstanceInputs = z.infer<typeof addHabitSchema>;
+export type AddHabitRecordInputs = z.infer<typeof addHabitRecordSchema>;

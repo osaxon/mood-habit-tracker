@@ -1,4 +1,5 @@
 import { getHabitDefinitions } from "@/app/actions";
+import CardSkeleton from "./CardSkeleton";
 import HabitDefCard from "./HabitDefCard";
 
 export default async function Activities() {
@@ -9,6 +10,7 @@ export default async function Activities() {
                 habitDefitions.map((habit) => (
                     <HabitDefCard key={habit.id} habitDefinition={habit} />
                 ))}
+            {habitDefitions.length < 1 && <CardSkeleton />}
         </div>
     );
 }

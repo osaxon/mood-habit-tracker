@@ -3,8 +3,8 @@ import SessionProvider from "@/components/SessionProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { auth } from "../libs/authconfig";
 import "./globals.css";
-import { auth } from "./lib/authconfig";
 const inter = Inter({ subsets: ["latin"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
@@ -21,7 +21,12 @@ export default async function RootLayout({
     const session = await auth();
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body
+                style={{
+                    backgroundImage: 'url("/bbblurry.svg")',
+                    backgroundSize: "cover",
+                }}
+            >
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="light"

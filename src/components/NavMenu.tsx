@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
+import Link from "next/link";
 import { Button } from "./ui/button";
 import {
     DropdownMenu,
@@ -24,44 +25,61 @@ function getUserInitials(name: string) {
 
 const AuthButton = () => {
     const { data: session } = useSession();
-    console.log(session);
+    const pathname = usePathname();
+
+    console.log(pathname);
 
     if (session) {
         return (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative rounded-full">
-                        <Avatar>
-                            <AvatarImage src={session.user?.image ?? ""} />
-                            <AvatarFallback>
-                                {getUserInitials(session.user?.name ?? "")}
-                            </AvatarFallback>
-                        </Avatar>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                        <div className="flex flex-col space-y-1">
-                            <p className="text-sm font-medium leading-none">
-                                shadcn
-                            </p>
-                            <p className="text-xs leading-none text-muted-foreground">
-                                m@example.com
-                            </p>
-                        </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuItem
-                        onClick={() =>
-                            signOut({
-                                callbackUrl: `${window.location.origin}`,
-                            })
-                        }
+            <div className="flex items-center gap-2">
+                {pathname === "/" && (
+                    <Link href="/dashboard">
+                        <Button variant="default">Your Dashboard</Button>
+                    </Link>
+                )}
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            className="relative rounded-full"
+                        >
+                            <Avatar>
+                                <AvatarImage src={session.user?.image ?? ""} />
+                                <AvatarFallback>
+                                    {getUserInitials(session.user?.name ?? "")}
+                                </AvatarFallback>
+                            </Avatar>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                        className="w-56"
+                        align="end"
+                        forceMount
                     >
-                        Log out
-                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+                        <DropdownMenuLabel className="font-normal">
+                            <div className="flex flex-col space-y-1">
+                                <p className="text-sm font-medium leading-none">
+                                    shadcn
+                                </p>
+                                <p className="text-xs leading-none text-muted-foreground">
+                                    m@example.com
+                                </p>
+                            </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                signOut({
+                                    callbackUrl: `${window.location.origin}`,
+                                })
+                            }
+                        >
+                            Log out
+                            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         );
     }
 
@@ -80,8 +98,6 @@ const AuthButton = () => {
 };
 
 export default function NavMenu() {
-    const pathname = usePathname();
-
     return (
         <header className="flex w-full justify-between items-center">
             <div className="flex gap-2 items-center">

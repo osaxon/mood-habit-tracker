@@ -67,8 +67,14 @@ model User {
 
 // Pre-defined Habits for users to select
 model HabitDefinition {
-    id             String          @id @default(cuid())
-    habitName      String
+    id        String @id @default(cuid())
+    habitName String
+
+    targetUnit TargetUnit
+    targetFreq TargetFrequency @default(Daily)
+    direction  Direction       @default(None)
+    category   HabitCategory   @default(Lifestyle)
+
     createdAt      DateTime        @default(now())
     habitInstances HabitInstance[]
 }
@@ -83,9 +89,7 @@ model HabitInstance {
     user              User            @relation(fields: [userId], references: [id])
 
     target      Float
-    targetUnit  TargetUnit
-    targetFreq  TargetFrequency @default(Daily)
-    completed   Boolean         @default(false)
+    completed   Boolean   @default(false)
     completedAt DateTime?
 
     records UserHabitRecord[]
@@ -99,16 +103,17 @@ model UserHabitRecord {
     id    String @id @default(cuid())
     value Float
 
-    habitId String
-    habit   HabitInstance @relation(fields: [habitId], references: [id])
+    habitInstanceId String
+    habit           HabitInstance @relation(fields: [habitInstanceId], references: [id])
 
     userId String
     user   User   @relation(fields: [userId], references: [id])
 
-    createdAt DateTime
+    createdAt   DateTime? @default(now())
+    createdDate DateTime?
 
     @@index([userId])
-    @@index([habitId])
+    @@index([habitInstanceId])
 }
 
 enum TargetUnit {
@@ -124,4 +129,19 @@ enum TargetFrequency {
     Weekly
     Monthly
     Annually
+}
+
+enum Direction {
+    Up
+    Down
+    None
+}
+
+enum HabitCategory {
+    Lifestyle
+    Diet
+    Exercise
+    Productivity
+    Education
+    Financial
 }

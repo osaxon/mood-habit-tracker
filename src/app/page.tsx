@@ -1,4 +1,4 @@
-import { auth } from "./lib/authconfig";
+import { auth } from "../libs/authconfig";
 
 export default async function Home() {
     const session = await auth();

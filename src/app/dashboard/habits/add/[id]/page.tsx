@@ -1,6 +1,6 @@
-import { auth } from "@/app/lib/authconfig";
 import { AddHabitForm } from "@/components/forms/AddHabitForm";
-import { cn } from "@/lib/utils";
+import { auth } from "@/libs/authconfig";
+import { cn } from "@/libs/utils";
 import { Space_Grotesk } from "next/font/google";
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 

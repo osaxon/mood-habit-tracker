@@ -13,8 +13,8 @@ const navLinks = [
         icon: DashboardIcon,
     },
     {
-        label: "Activities",
-        href: "/dashboard/activities",
+        label: "Habits",
+        href: "/dashboard/habits",
         icon: LightningBoltIcon,
     },
     {

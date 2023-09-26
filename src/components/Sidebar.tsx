@@ -1,6 +1,6 @@
 "use client";
 import Navigation from "@/app/dashboard/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import {
     DoubleArrowLeftIcon,
     DoubleArrowRightIcon,
@@ -33,22 +33,30 @@ export default function Sidebar() {
     return (
         <aside
             className={cn(
-                "relative transition-all duration-300 px-2",
+                "relative transition-all bg-secondary py-4 duration-300",
                 { "w-64": isOpen },
-                { "w-5": !isOpen }
+                { "w-0": !isOpen }
             )}
         >
-            <Navigation />
-            <div className="absolute top-1/3 right-2">
+            {isOpen ? <Navigation /> : null}
+
+            <div
+                className={cn(
+                    "absolute top-1/4",
+                    { "right-2": isOpen },
+                    { "-right-1 text-secondary-foreground": !isOpen }
+                )}
+            >
                 <Button
                     onClick={() => setIsOpen(!isOpen)}
                     size="icon"
-                    variant="ghost"
+                    className="w-6 z-99"
+                    variant="secondary"
                 >
                     {isOpen ? (
-                        <DoubleArrowLeftIcon />
+                        <DoubleArrowLeftIcon className="w-4 h-4" />
                     ) : (
-                        <DoubleArrowRightIcon />
+                        <DoubleArrowRightIcon className="w-4 h-4" />
                     )}
                 </Button>
             </div>

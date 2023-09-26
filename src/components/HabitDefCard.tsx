@@ -31,7 +31,7 @@ export default function HabitDefCard({
                 <div>Content</div>
             </CardContent>
             <CardFooter>
-                <Link href={`/dashboard/activities/add/${id}`}>
+                <Link href={`/dashboard/habits/add/${id}`}>
                     <Button>Add to My Dashboard</Button>
                 </Link>
             </CardFooter>

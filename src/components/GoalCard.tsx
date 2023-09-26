@@ -9,16 +9,36 @@ import {
 } from "@/components/ui/card";
 import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import TinyBarChart from "./TinyBarChart";
+import { HabitWithRelations } from "../types/prisma";
 import { Button } from "./ui/button";
 
-export default function GoalCard() {
-    const [goal, setGoal] = useState(10);
+export default function GoalCard({
+    habit,
+    children,
+}: {
+    habit: HabitWithRelations;
+    children: React.ReactNode;
+}) {
+    console.log(habit);
+    const {
+        active,
+        target,
+
+        completedAt,
+        habitDefinition,
+    } = habit;
+    const { targetUnit, targetFreq } = habitDefinition;
+    const [goal, setGoal] = useState(target);
+
+    const { habitName } = habitDefinition;
+
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Your Goal</CardTitle>
-                <CardDescription>Set your daily activity goal</CardDescription>
+                <CardTitle>{habitName}</CardTitle>
+                <CardDescription>
+                    Set your {targetFreq.toLowerCase()} activity goal
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="flex justify-between items-center">
@@ -34,7 +54,7 @@ export default function GoalCard() {
                     <div className="flex flex-col justify-center items-center gap-2">
                         <span className="text-2xl font-bold">{goal}</span>
                         <span className="font-thin text-xs uppercase">
-                            Minutes meditation per day
+                            {targetUnit} - {targetFreq}
                         </span>
                     </div>
 
@@ -47,12 +67,10 @@ export default function GoalCard() {
                         <PlusIcon />
                     </Button>
                 </div>
-                <div className="h-[80px]">
-                    <TinyBarChart />
-                </div>
+                <div className="h-[80px]">{children}</div>
             </CardContent>
             <CardFooter>
-                <Button className="w-full">Set goal</Button>
+                <Button className="w-full">Add Data</Button>
             </CardFooter>
         </Card>
     );
