@@ -1,5 +1,4 @@
 import { getSingleHabitDef } from "@/app/actions";
-import { AddHabitForm } from "@/components/forms/AddHabitForm";
 import { auth } from "@/libs/authconfig";
 import { cn } from "@/libs/utils";
 import { Space_Grotesk } from "next/font/google";
@@ -15,9 +14,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <section className="@container bg-secondary p-4 w-full">
             <h2 className={cn("font-bold", spaceGrotesk.className)}>Add</h2>
             <p>{id}</p>
-            <div>
-                <AddHabitForm userId={userId} habitDef={habitDef} />
-            </div>
+            <div></div>
         </section>
     );
 }
