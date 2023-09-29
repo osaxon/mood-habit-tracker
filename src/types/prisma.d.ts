@@ -7,7 +7,7 @@ export type UserDashboardData = Prisma.UserGetPayload<{
     };
 }>;
 
-export type HabitWithRelations = Prisma.HabitInstanceGetPayload<{
+export type HabitInstanceWithRelations = Prisma.HabitInstanceGetPayload<{
     include: { habitDefinition: true };
 }>;
 

@@ -1,9 +1,9 @@
-import CardSkeleton from "@/components/CardSkeleton";
-import GoalCard from "@/components/GoalCard";
-import HabitChart from "@/components/HabitChart";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "../../libs/authconfig";
 import { getUserDashboardData } from "../actions";
+import Dashboard from "./_components/dashboard";
 
 export default async function Page() {
     const session = await auth();
@@ -15,21 +15,21 @@ export default async function Page() {
     const { habitInstances } = await getUserDashboardData({
         id: session?.user.id,
     });
+    console.log(habitInstances);
 
     return (
-        <section className="@container p-4 w-full">
-            <div className="grid @lg:grid-cols-2 grid-cols-1 gap-4">
-                {habitInstances &&
-                    habitInstances.map((habit) => (
-                        <GoalCard habit={habit} key={habit.id}>
-                            <HabitChart
-                                target={habit.target}
-                                habitId={habit.id}
-                            />
-                        </GoalCard>
-                    ))}
-                {habitInstances.length < 1 && <CardSkeleton />}
+        <>
+            <div className="flex justify-between items-end">
+                <div>
+                    <p>Dashboard</p>
+                    <p>This is the dashboard with all your stuff</p>
+                </div>
+                <Button asChild>
+                    <Link href="/dashboard/habits/">Add</Link>
+                </Button>
             </div>
-        </section>
+            <Dashboard habitInstances={habitInstances} />
+        </>
     );
+    2;
 }

@@ -1,20 +1,28 @@
-import Habits from "@/components/Habits";
+import { Button } from "@/components/ui/button";
 import { auth } from "@/libs/authconfig";
-import { cn } from "@/libs/utils";
 import { Space_Grotesk } from "next/font/google";
+import Link from "next/link";
+import HabitsGrid from "../_components/habits-grid";
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export default async function Page() {
     const session = await auth();
+    if (!session || !session.user) {
+        return <>unauthorised</>;
+    }
 
     return (
-        <section className="@container p-4 w-full">
-            <h2 className={cn("font-bold", spaceGrotesk.className)}>
-                Activities
-            </h2>
-            <div className="grid @lg:grid-cols-2 grid-cols-1 gap-4">
-                <Habits />
+        <>
+            <div className="flex justify-between items-end">
+                <div>
+                    <p className="font-bold text-2xl">Select Habits</p>
+                    <p>Pick one or more habits to track on your dashboard</p>
+                </div>
+                <Button asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                </Button>
             </div>
-        </section>
+            <HabitsGrid />
+        </>
     );
 }

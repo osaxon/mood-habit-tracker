@@ -1,6 +1,5 @@
 import NavMenu from "@/components/NavMenu";
 import SessionProvider from "@/components/SessionProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { auth } from "../libs/authconfig";
@@ -22,18 +21,10 @@ export default async function RootLayout({
     return (
         <html lang="en">
             <SessionProvider session={session}>
-                <body className="w-full overflow-x-hidden">
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="light"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        <NavMenu />
-                        <main className="@container gap-2 min-h-screen m-large">
-                            {children}
-                        </main>
-                    </ThemeProvider>
+                <body>
+                    <NavMenu />
+
+                    {children}
                 </body>
             </SessionProvider>
         </html>

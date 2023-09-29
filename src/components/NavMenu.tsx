@@ -80,33 +80,40 @@ export default function NavMenu() {
     const { data: session } = useSession();
 
     return (
-        <div className="flex w-full p-large py-4 justify-between items-center border-b border-muted-foreground">
-            <div className="flex gap-2 items-center">
-                <Image
-                    alt="brand logo"
-                    width={48}
-                    height={48}
-                    src="/lotus-flower.png"
-                />
-                <p className={cn("text-4xl font-bold", spaceGrotesk.className)}>
-                    {`[Hab:It]`}
-                </p>
-            </div>
+        <header className="border-b py-4 border-muted-foreground">
+            <div className="max-w-7xl px-4 mx-auto flex items-center justify-between w-full">
+                <Link className="flex gap-2 items-center" href="/">
+                    <Image
+                        alt="brand logo"
+                        width={48}
+                        height={48}
+                        src="/lotus-flower.png"
+                    />
+                    <p
+                        className={cn(
+                            "text-4xl font-bold",
+                            spaceGrotesk.className
+                        )}
+                    >
+                        {`Hab:It..`}
+                    </p>
+                </Link>
 
-            {session && session.user ? (
-                <UserMenu session={session} />
-            ) : (
-                <Button
-                    onClick={() =>
-                        signIn(undefined, {
-                            callbackUrl: `${window.location.origin}/dashboard`,
-                        })
-                    }
-                    variant="default"
-                >
-                    Log In
-                </Button>
-            )}
-        </div>
+                {session && session.user ? (
+                    <UserMenu session={session} />
+                ) : (
+                    <Button
+                        onClick={() =>
+                            signIn(undefined, {
+                                callbackUrl: `${window.location.origin}/dashboard`,
+                            })
+                        }
+                        variant="default"
+                    >
+                        Log In
+                    </Button>
+                )}
+            </div>
+        </header>
     );
 }

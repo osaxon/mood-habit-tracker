@@ -12,17 +12,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { addHabitSchema } from "@/libs/formSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { HabitDefinition } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
+export function AddHabitForm({
+    userId,
+    habitDef,
+}: {
+    userId: string;
+    habitDef: HabitDefinition;
+}) {
     const router = useRouter();
-
+    const { id, targetFreq, targetUnit } = habitDef;
     const form = useForm<z.infer<typeof addHabitSchema>>({
         resolver: zodResolver(addHabitSchema),
         defaultValues: {
-            habitId: id,
+            habitDefinitionId: id,
             userId: userId,
         },
     });
@@ -53,36 +60,9 @@ export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
                 />
                 <FormField
                     control={form.control}
-                    name="targetUnit"
+                    name="habitDefinitionId"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Unit</FormLabel>
-                            <FormControl>
-                                <Input type="string" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="targetFreq"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Frequency</FormLabel>
-                            <FormControl>
-                                <Input type="string" {...field} />
-                            </FormControl>
-
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="habitId"
-                    render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="hidden">
                             <FormLabel>Habit</FormLabel>
                             <FormControl>
                                 <Input type="string" {...field} />
@@ -95,7 +75,7 @@ export function AddHabitForm({ id, userId }: { id: string; userId: string }) {
                     control={form.control}
                     name="userId"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="hidden">
                             <FormLabel>User</FormLabel>
                             <FormControl>
                                 <Input type="string" {...field} />

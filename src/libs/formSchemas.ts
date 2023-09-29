@@ -1,13 +1,5 @@
 import { z } from "zod";
-import { TargetFrequency, TargetUnit } from "@prisma/client";
-
-export const addHabitSchema = z.object({
-    habitId: z.string(),
-    userId: z.string(),
-    target: z.coerce.number().min(1),
-    targetUnit: z.nativeEnum(TargetUnit),
-    targetFreq: z.nativeEnum(TargetFrequency),
-});
+import { TargetFrequency, TargetUnit, HabitDefinition } from "@prisma/client";
 
 export const addHabitRecordSchema = z.object({
     value: z.number(),
@@ -15,5 +7,10 @@ export const addHabitRecordSchema = z.object({
     userId: z.string(),
 });
 
-export type AddHabitInstanceInputs = z.infer<typeof addHabitSchema>;
+export const addHabitInstanceSchema = z.object({
+    habitDefinitionId: z.string(),
+    userId: z.string(),
+});
+
+export type AddHabitInstanceInputs = z.infer<typeof addHabitInstanceSchema>;
 export type AddHabitRecordInputs = z.infer<typeof addHabitRecordSchema>;

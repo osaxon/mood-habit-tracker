@@ -67,14 +67,17 @@ model User {
 
 // Pre-defined Habits for users to select
 model HabitDefinition {
-    id        String @id @default(cuid())
-    habitName String
-
-    targetUnit TargetUnit
-    targetFreq TargetFrequency @default(Daily)
-    direction  Direction       @default(None)
-    category   HabitCategory   @default(Lifestyle)
-
+    id             String          @id @default(cuid())
+    habitName      String
+    description    String?
+    targetUnit     TargetUnit
+    targetFreq     TargetFrequency @default(Daily)
+    direction      Direction       @default(None)
+    category       HabitCategory   @default(Lifestyle)
+    icon           String?
+    targetValue    Float
+    duration       Int             @default(2)
+    durationUnit   DurationUnit    @default(week)
     createdAt      DateTime        @default(now())
     habitInstances HabitInstance[]
 }
@@ -88,9 +91,10 @@ model HabitInstance {
     userId            String
     user              User            @relation(fields: [userId], references: [id])
 
-    target      Float
-    completed   Boolean   @default(false)
-    completedAt DateTime?
+    completed       Boolean   @default(false)
+    completedAt     DateTime?
+    expiresAt       DateTime?
+    percentComplete Float     @default(0)
 
     records UserHabitRecord[]
 
@@ -122,6 +126,13 @@ enum TargetUnit {
     Days
     Litres
     Number
+}
+
+enum DurationUnit {
+    day
+    week
+    month
+    year
 }
 
 enum TargetFrequency {

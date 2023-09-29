@@ -7,9 +7,10 @@ import { prisma, xprisma } from "../libs/prisma";
 import {
     type AddHabitInstanceInputs,
     type AddHabitRecordInputs,
-    addHabitSchema,
+    addHabitInstanceSchema,
     addHabitRecordSchema,
 } from "../libs/formSchemas";
+import { revalidatePath } from "next/cache";
 import { type HabitInstance, type UserHabitRecord } from "@prisma/client";
 import dayjs from "dayjs";
 
@@ -23,6 +24,16 @@ export async function getHabitDefinitions() {
         take: 100,
     });
     return data;
+}
+
+export async function getSingleHabitDef(habitId: string) {
+    const habit = await prisma.habitDefinition.findUnique({
+        where: { id: habitId },
+    });
+    if (!habit) {
+        throw new Error("Record not found");
+    }
+    return habit;
 }
 
 export async function getBarChartData(habitId: string) {
@@ -105,31 +116,30 @@ export async function getUserDashboardData({
 }
 
 export async function getUsersHabits({ userId }: { userId: string }) {
-    const data = await prisma.habitInstance.findMany({ where: { userId } });
+    const data = await prisma.habitInstance.findMany({
+        where: { userId },
+        include: { habitDefinition: true },
+    });
     return data;
 }
 
 export async function addHabitInstance(
     inputs: AddHabitInstanceInputs
 ): Promise<AddToDatabaseResponse<HabitInstance>> {
-    const validateInput = addHabitSchema.safeParse(inputs);
-    const { success } = validateInput;
-
-    if (!success) {
-        throw new Error(getMessageFromError(validateInput.error));
-    }
+    const currentDate = dayjs();
 
     let data;
-    try {
-        // TODO: Update form schema to avoid ugly destructuring and renaming of the inputs.
-        const { habitId: habitDefinitionId, ...rest } = inputs;
-        const inputData = { habitDefinitionId, ...rest };
 
+    try {
+        console.log("adding habit instance");
         data = await prisma.habitInstance.create({
             data: {
-                ...inputData,
+                ...inputs,
+                expiresAt: currentDate.toDate(),
             },
         });
+        revalidatePath("/dashboard/habits");
+        console.log("successfully added");
     } catch (error) {
         throw new Error(getMessageFromError(error));
     }

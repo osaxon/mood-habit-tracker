@@ -1,9 +1,5 @@
-import Sidebar from "@/components/Sidebar";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { auth } from "../../libs/authconfig";
-import "../globals.css";
-const inter = Inter({ subsets: ["latin"] });
+import { auth } from "@/libs/authconfig";
+import { type Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -17,9 +13,8 @@ export default async function DashboardLayout({
 }) {
     const session = await auth();
     return (
-        <div className="flex items-stretch">
-            <Sidebar />
+        <main className="max-w-7xl mx-auto py-12 space-y-6 px-4">
             {children}
-        </div>
+        </main>
     );
 }

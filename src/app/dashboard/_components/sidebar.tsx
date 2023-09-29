@@ -1,12 +1,56 @@
 "use client";
-import Navigation from "@/app/dashboard/navigation";
 import { cn } from "@/libs/utils";
 import {
+    DashboardIcon,
     DoubleArrowLeftIcon,
     DoubleArrowRightIcon,
+    LightningBoltIcon,
+    PersonIcon,
 } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../../../components/ui/button";
+
+const navLinks = [
+    {
+        label: "Overview",
+        href: "/dashboard",
+        icon: DashboardIcon,
+    },
+    {
+        label: "Habits",
+        href: "/dashboard/habits",
+        icon: LightningBoltIcon,
+    },
+    {
+        label: "Account",
+        href: "/dashboard/account",
+        icon: PersonIcon,
+    },
+];
+
+function Navigation() {
+    return (
+        <nav>
+            <ul className="space-y-4">
+                {navLinks.map(({ label, href, icon: Icon }) => (
+                    <li key={label}>
+                        <Link href={href}>
+                            <Button
+                                className="gap-2 w-full justify-start"
+                                variant="ghost"
+                                size="lg"
+                            >
+                                <Icon />
+                                {label}
+                            </Button>
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+    );
+}
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -33,7 +77,7 @@ export default function Sidebar() {
     return (
         <aside
             className={cn(
-                "relative transition-all bg-secondary py-4 duration-300",
+                "relative transition-all p-4 duration-300",
                 { "w-64": isOpen },
                 { "w-0": !isOpen }
             )}
