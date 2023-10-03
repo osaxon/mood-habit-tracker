@@ -93,14 +93,16 @@ export async function getBarChartData(habitId: string) {
 }
 
 export async function getUserDashboardData({
-    id,
+    userId,
 }: {
-    id: string;
+    userId: string;
 }): Promise<UserDashboardData> {
     let data: UserDashboardData | null;
+    console.log(userId);
+
     try {
         data = await prisma.user.findUnique({
-            where: { id },
+            where: { id: userId },
             include: {
                 habitInstances: { include: { habitDefinition: true } },
                 habitRecords: true,
@@ -109,9 +111,11 @@ export async function getUserDashboardData({
     } catch (error) {
         throw new Error(getMessageFromError(error));
     }
+
     if (!data) {
         throw new Error("User not found");
     }
+
     return data;
 }
 
@@ -169,6 +173,7 @@ export async function addHabitRecord(
                 ...inputs,
             },
         });
+        revalidatePath("/dashboard");
     } catch (error) {
         throw new Error(getMessageFromError(error));
     }

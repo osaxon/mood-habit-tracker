@@ -3,18 +3,21 @@ import * as React from "react";
 
 import { cn } from "@/libs/utils";
 
-const progressBarVariants = cva("bg-emerald-500 flex items-center rounded", {
-    variants: {
-        size: {
-            default: "p-2",
-            sm: "p-0.5",
-            lg: "p-3",
+const progressBarVariants = cva(
+    "bg-emerald-500 flex items-center rounded transition-all",
+    {
+        variants: {
+            size: {
+                default: "p-2",
+                sm: "p-0.5",
+                lg: "p-3",
+            },
         },
-    },
-    defaultVariants: {
-        size: "default",
-    },
-});
+        defaultVariants: {
+            size: "default",
+        },
+    }
+);
 
 export interface ProgressBarProps
     extends React.HTMLAttributes<HTMLDivElement>,

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "../../libs/authconfig";
-import { getUserDashboardData } from "../actions";
 import Dashboard from "./_components/dashboard";
 
 export default async function Page() {
@@ -12,10 +11,8 @@ export default async function Page() {
         redirect("/api/auth/signin");
     }
 
-    const { habitInstances } = await getUserDashboardData({
-        id: session?.user.id,
-    });
-    console.log(habitInstances);
+    const { user } = session;
+    const { id } = user;
 
     return (
         <>
@@ -28,7 +25,7 @@ export default async function Page() {
                     <Link href="/dashboard/habits/">Add</Link>
                 </Button>
             </div>
-            <Dashboard habitInstances={habitInstances} />
+            <Dashboard userId={id} />
         </>
     );
     2;

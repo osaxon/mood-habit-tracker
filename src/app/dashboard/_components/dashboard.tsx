@@ -1,21 +1,24 @@
-"use client";
+import { getUserDashboardData } from "@/app/actions";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
-    CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 import ProgressBar from "@/components/ui/progress-bar";
-import { HabitInstanceWithRelations } from "@/types/prisma";
 import Image from "next/image";
+import RecordActivityButton from "./record-activity-button";
 
-export default function Dashboard({
-    habitInstances,
-}: {
-    habitInstances: HabitInstanceWithRelations[];
-}) {
-    console.log(habitInstances);
+export default async function Dashboard({ userId }: { userId: string }) {
+    const { habitInstances, habitRecords } = await getUserDashboardData({
+        userId,
+    });
+
+    const totalHabitRecords = habitRecords.length;
+    console.log(totalHabitRecords);
+
     return (
         <section className="@container">
             {!habitInstances ? (
@@ -26,13 +29,19 @@ export default function Dashboard({
                         ({ id, percentComplete, habitDefinition }) => {
                             const {
                                 habitName,
+                                description,
                                 targetUnit,
                                 targetFreq,
                                 direction,
                                 category,
                                 targetValue,
+                                duration,
+                                durationUnit,
                                 icon,
                             } = habitDefinition;
+                            const records = habitRecords.filter(
+                                ({ habitInstanceId }) => habitInstanceId === id
+                            );
                             return (
                                 <Card
                                     className="relative overflow-clip"
@@ -40,22 +49,49 @@ export default function Dashboard({
                                 >
                                     <CardHeader>
                                         <CardTitle>{habitName}</CardTitle>
-                                        <CardDescription></CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="">
-                                        <Image
-                                            width={80}
-                                            height={80}
-                                            alt=""
-                                            className="opacity-25"
-                                            src={`/habit-icons/${icon}`}
-                                        />
-                                        <div className="max-w-sm">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-muted">
+                                                {records.length}
+                                            </span>
                                             <ProgressBar
-                                                progress={percentComplete}
+                                                size="sm"
+                                                progress={
+                                                    (records.length /
+                                                        duration) *
+                                                    100
+                                                }
                                             />
                                         </div>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex items-end">
+                                            <Image
+                                                width={80}
+                                                height={80}
+                                                alt=""
+                                                className="opacity-25"
+                                                src={`/habit-icons/${icon}`}
+                                            />
+                                            <div>
+                                                <p>{targetFreq} challenge</p>
+                                                <p>
+                                                    Record activity for the next{" "}
+                                                    {duration} {durationUnit}
+                                                    {duration > 1 && "s"}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </CardContent>
+                                    <CardFooter className="gap-4">
+                                        <RecordActivityButton
+                                            habitInstanceId={id}
+                                            userId={userId}
+                                            value={1}
+                                        />
+                                        <Button variant="secondary">
+                                            View Activity
+                                        </Button>
+                                    </CardFooter>
                                 </Card>
                             );
                         }
