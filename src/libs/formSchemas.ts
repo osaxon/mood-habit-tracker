@@ -1,10 +1,12 @@
 import { z } from "zod";
-import { TargetFrequency, TargetUnit, HabitDefinition } from "@prisma/client";
 
 export const addHabitRecordSchema = z.object({
-    value: z.number(),
+    value: z.coerce.number(),
     habitInstanceId: z.string(),
     userId: z.string(),
+    createdDate: z.date({
+        required_error: "Created Date is required.",
+    }),
 });
 
 export const addHabitInstanceSchema = z.object({

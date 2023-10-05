@@ -1,3 +1,4 @@
+const colors = require("tailwindcss/colors");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ["class"],
@@ -33,6 +34,10 @@ module.exports = {
                 destructive: {
                     DEFAULT: "hsl(var(--destructive))",
                     foreground: "hsl(var(--destructive-foreground))",
+                },
+                success: {
+                    DEFAULT: colors.emerald[500],
+                    foreground: "hsl(var(--background))",
                 },
                 muted: {
                     DEFAULT: "hsl(var(--muted))",

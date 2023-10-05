@@ -7,12 +7,17 @@ import { prisma, xprisma } from "../libs/prisma";
 import {
     type AddHabitInstanceInputs,
     type AddHabitRecordInputs,
-    addHabitInstanceSchema,
     addHabitRecordSchema,
 } from "../libs/formSchemas";
 import { revalidatePath } from "next/cache";
-import { type HabitInstance, type UserHabitRecord } from "@prisma/client";
+import {
+    TargetFrequency,
+    type HabitInstance,
+    type UserHabitRecord,
+} from "@prisma/client";
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+dayjs.extend(advancedFormat);
 
 const getMessageFromError = (error: unknown) => {
     if (error instanceof Error) return error.message;
@@ -36,59 +41,63 @@ export async function getSingleHabitDef(habitId: string) {
     return habit;
 }
 
-export async function getBarChartData(habitId: string) {
-    // data to be returned for the last 7 days
-    const today = dayjs().endOf("day");
-    const oneWeekAgo = dayjs().startOf("day").subtract(6, "day");
+export async function getChartData(
+    habitId: string,
+    habitFreq: TargetFrequency
+) {
+    const range = 6;
+    const unit = habitFreq === "Weekly" ? "week" : "day";
+    const dateFormat = habitFreq === "Weekly" ? "DD-MM-YYYY" : "DD-MM";
+    const today = dayjs().endOf(unit);
+    const startDate = dayjs().startOf(unit).subtract(range, unit);
 
-    // Generate an array of dates for the last 7 days
-    const dateRange = [];
-    for (let i = 0; i < 7; i++) {
-        dateRange.push(oneWeekAgo.add(i, "day").toDate());
-    }
-
+    // get habit record data and group by the created date
     const data = await prisma.userHabitRecord.groupBy({
         by: ["createdDate"],
         _sum: {
             value: true,
         },
         where: {
-            habitInstanceId: habitId, // Filter by the specific habit
+            habitInstanceId: habitId,
             createdDate: {
-                gte: oneWeekAgo.toDate(),
+                gte: startDate.toDate(),
                 lt: today.toDate(),
             },
         },
     });
-    console.log(data);
 
-    // Create a map to store the data by date
-    const dataMap = new Map();
-    data.forEach((item) => {
-        dataMap.set(
-            dayjs(item.createdDate).format("YYYY-MM-DD"),
-            item._sum.value || 0
-        );
-    });
+    let dataSums: { [key: string]: number } = {};
 
-    console.log(dataMap);
+    if (habitFreq === "Weekly") {
+        data.forEach((item) => {
+            const weekCommencingDate = dayjs(item.createdDate)
+                .startOf("week")
+                .format("DD-MM-YYYY");
+            if (!dataSums[weekCommencingDate]) {
+                dataSums[weekCommencingDate] = 0;
+            }
+            dataSums[weekCommencingDate] += item._sum.value!;
+        });
+    } else {
+        data.forEach((item) => {
+            const date = dayjs(item.createdDate).format(dateFormat);
+            dataSums[date] = item._sum.value || 0;
+        });
+    }
 
-    // Fill in missing days with zero values
-    dateRange.forEach((date) => {
-        const formattedDate = dayjs(date).format("YYYY-MM-DD");
-        if (!dataMap.has(formattedDate)) {
-            dataMap.set(formattedDate, 0);
-        }
-    });
+    const chartData = [];
 
-    // Convert the map to an array of objects
-    const chartData = Array.from(dataMap).map(([date, value]) => ({
-        date,
-        value,
-    }));
+    for (let i = 0; i <= range; i++) {
+        const date = startDate.add(i, unit);
+        const formattedDate = date.format(dateFormat);
 
-    chartData.reverse();
+        chartData.push({
+            date: formattedDate,
+            value: dataSums[formattedDate] || 0,
+        });
+    }
 
+    revalidatePath("/dashboard");
     return chartData;
 }
 
@@ -166,13 +175,16 @@ export async function addHabitRecord(
     }
 
     let data;
+
     try {
         // the extended prisma client ensures the createdDate field is set for all new habit records
-        data = await prisma.userHabitRecord.create({
+        data = await xprisma.userHabitRecord.create({
             data: {
                 ...inputs,
+                value: Number(inputs.value),
             },
         });
+        console.log("successfully added record");
         revalidatePath("/dashboard");
     } catch (error) {
         throw new Error(getMessageFromError(error));

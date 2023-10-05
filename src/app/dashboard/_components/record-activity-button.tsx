@@ -23,6 +23,7 @@ export default function RecordActivityButton(props: AddHabitRecordInputs) {
             setLoading(false);
         }
     };
+
     return (
         <Button disabled={loading} onClick={handleSubmit}>
             {loading && <ReloadIcon className="mr-2 w-4 animate-spin" />}

@@ -25,12 +25,21 @@ export const xprisma = prisma.$extends({
         userHabitRecord: {
             create: async ({ model, operation, args, query }) => {
                 const { data } = args;
+                let { createdDate } = data;
+
+                if (!createdDate) {
+                    createdDate = dayjs(new Date()).startOf("day").toDate();
+                } else {
+                    createdDate = dayjs(createdDate).startOf("day").toDate();
+                }
+
                 const habitRecord = await prisma.userHabitRecord.create({
                     data: {
                         ...data,
-                        createdDate: dayjs(new Date()).startOf("day").toDate(),
+                        createdDate: createdDate,
                     },
                 });
+                return habitRecord;
             },
         },
     },

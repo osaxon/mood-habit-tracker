@@ -1,59 +1,40 @@
 "use client";
-import { Line, LineChart, ResponsiveContainer } from "recharts";
+import {
+    Line,
+    LineChart,
+    ReferenceLine,
+    ResponsiveContainer,
+    XAxis,
+} from "recharts";
 
-const data = [
-    {
-        name: "Page A",
-        uv: 2800,
-        pv: 2100,
-        amt: 2400,
-    },
-    {
-        name: "Page B",
-        uv: 2800,
-        pv: 2300,
-        amt: 2400,
-    },
-    {
-        name: "Page C",
-        uv: 2800,
-        pv: 2500,
-        amt: 2400,
-    },
-    {
-        name: "Page D",
-        uv: 2800,
-        pv: 2400,
-        amt: 2400,
-    },
-    {
-        name: "Page E",
-        uv: 2800,
-        pv: 2800,
-        amt: 2400,
-    },
-    {
-        name: "Page F",
-        uv: 2800,
-        pv: 2400,
-        amt: 2400,
-    },
-    {
-        name: "Page G",
-        uv: 2800,
-        pv: 1900,
-        amt: 2400,
-    },
-];
+type CustomDotProps = {
+    cy?: number;
+    cx?: number;
+    value?: number;
+    target?: number;
+};
 
-export default function TinyLineChart() {
+export default function TinyLineChart({
+    data,
+    target,
+}: {
+    data: any;
+    target: number;
+}) {
+    console.log(target);
     return (
         <ResponsiveContainer width="100%" height="100%">
             <LineChart width={300} height={100} data={data}>
+                <XAxis
+                    interval="preserveStartEnd"
+                    minTickGap={6}
+                    dataKey="date"
+                />
+                <ReferenceLine ifOverflow="extendDomain" y={target} />
                 <Line
                     stroke="hsl(142.1 76.2% 36.3%)"
                     type="monotone"
-                    dataKey="pv"
+                    dataKey="value"
                     strokeWidth={2}
                 />
             </LineChart>
