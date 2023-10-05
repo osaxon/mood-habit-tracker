@@ -35,9 +35,10 @@ export default async function UsersHabitCard({
             <CardHeader>
                 <CardTitle>{habitName}</CardTitle>
             </CardHeader>
-            <CardContent>
-                <div className="h-[90px]">
-                    <p>Your progress for the last 7 {freqLabel}&apos;s</p>
+            <CardContent className="flex flex-col gap-8">
+                <p>Your progress for the last 7 {freqLabel}&apos;s</p>
+
+                <div className="h-32">
                     {targetFreq === "Daily" ? (
                         <TinyLineChart data={chartData} target={targetValue} />
                     ) : (
