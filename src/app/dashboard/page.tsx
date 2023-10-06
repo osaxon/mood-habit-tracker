@@ -14,18 +14,19 @@ export default async function Page() {
     const { id } = user;
 
     return (
-        <>
-            <div className="flex justify-between items-end">
+        <div className="space-y-6">
+            <div className="flex justify-between items-end py-4">
                 <div>
-                    <p>Dashboard</p>
+                    <p className="font-bold text-2xl">Dashboard</p>
                     <p>This is the dashboard with all your stuff</p>
                 </div>
                 <Button asChild>
                     <Link href="/dashboard/habits/">Add</Link>
                 </Button>
             </div>
+
             <Dashboard userId={id} />
-        </>
+        </div>
     );
     2;
 }

@@ -12,8 +12,8 @@ export default async function Page() {
     }
 
     return (
-        <>
-            <div className="flex justify-between items-end">
+        <div className="space-y-6">
+            <div className="flex justify-between items-end py-4">
                 <div>
                     <p className="font-bold text-2xl">Select Habits</p>
                     <p>Pick one or more habits to track on your dashboard</p>
@@ -23,6 +23,6 @@ export default async function Page() {
                 </Button>
             </div>
             <HabitsGrid />
-        </>
+        </div>
     );
 }

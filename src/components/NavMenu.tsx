@@ -9,6 +9,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 import { cn } from "@/libs/utils";
 import { Session } from "next-auth";
 import Link from "next/link";
+import Container from "./container";
 import { Button } from "./ui/button";
 import {
     DropdownMenu,
@@ -53,10 +54,10 @@ const UserMenu = ({ session }: { session: Session }) => {
                     <DropdownMenuLabel className="font-normal">
                         <div className="flex flex-col space-y-1">
                             <p className="text-sm font-medium leading-none">
-                                shadcn
+                                {session.user.name}
                             </p>
                             <p className="text-xs leading-none text-muted-foreground">
-                                m@example.com
+                                {session.user.email}
                             </p>
                         </div>
                     </DropdownMenuLabel>
@@ -80,8 +81,8 @@ export default function NavMenu() {
     const { data: session } = useSession();
 
     return (
-        <header className="border-b py-4 border-muted-foreground">
-            <div className="max-w-7xl px-4 mx-auto flex items-center justify-between w-full">
+        <header className="border-b border-muted-foreground w-full">
+            <Container as="div" className="flex items-center justify-between">
                 <Link className="flex gap-2 items-center" href="/">
                     <Image
                         alt="brand logo"
@@ -113,7 +114,7 @@ export default function NavMenu() {
                         Log In
                     </Button>
                 )}
-            </div>
+            </Container>
         </header>
     );
 }

@@ -1,6 +1,8 @@
-import { auth } from "../libs/authconfig";
-
+import Container from "@/components/container";
 export default async function Home() {
-    const session = await auth();
-    return <section></section>;
+    return (
+        <Container as="section" height="page" className="border">
+            <p className="text-4xl font-bold border">Main title here</p>
+        </Container>
+    );
 }

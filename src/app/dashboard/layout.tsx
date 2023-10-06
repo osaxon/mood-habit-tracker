@@ -1,3 +1,4 @@
+import Container from "@/components/container";
 import { auth } from "@/libs/authconfig";
 import { type Metadata } from "next";
 export const metadata: Metadata = {
@@ -12,6 +13,8 @@ export default async function DashboardLayout({
 }) {
     const session = await auth();
     return (
-        <div className="max-w-7xl mx-auto py-12 space-y-6 px-4">{children}</div>
+        <Container as="section" height="page">
+            {children}
+        </Container>
     );
 }
