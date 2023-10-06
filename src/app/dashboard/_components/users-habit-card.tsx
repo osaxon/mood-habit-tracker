@@ -1,5 +1,4 @@
 import { getChartData } from "@/app/actions";
-import TinyLineChart from "@/components/TinyLineChart";
 import { RecordAcivityForm } from "@/components/forms/record-acivity-form";
 import {
     Card,
@@ -9,10 +8,9 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-import TinyBarChart from "@/components/TinyBarChart";
 import { HabitInstanceWithRelations } from "@/types/prisma";
-import ChartDataAccordian from "./chart-data-accordian";
 import RecordActivityModal from "./record-activity-dialog";
+import UserHabitCardContent from "./users-habit-card-content";
 
 export default async function UsersHabitCard({
     habitInstance,
@@ -35,17 +33,12 @@ export default async function UsersHabitCard({
             <CardHeader>
                 <CardTitle>{habitName}</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-8">
-                <p>Your progress for the last 7 {freqLabel}&apos;s</p>
-
-                <div className="h-32">
-                    {targetFreq === "Daily" ? (
-                        <TinyLineChart data={chartData} target={targetValue} />
-                    ) : (
-                        <TinyBarChart data={chartData} target={targetValue} />
-                    )}
-                </div>
-                <ChartDataAccordian data={chartData} />
+            <CardContent>
+                <UserHabitCardContent
+                    chartData={chartData}
+                    freqLabel={freqLabel}
+                    targetValue={targetValue}
+                />
             </CardContent>
             <CardFooter className="gap-4">
                 <RecordActivityModal>
