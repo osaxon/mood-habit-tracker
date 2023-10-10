@@ -57,6 +57,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    role          UserRole  @default(USER)
 
     // the habits selected by a user to track on their profile
     habitInstances HabitInstance[]
@@ -120,6 +121,13 @@ model UserHabitRecord {
     @@index([habitInstanceId])
 }
 
+model Invitations {
+    token  String   @id @default(cuid())
+    email  String
+    expiry DateTime
+    used   Boolean
+}
+
 enum TargetUnit {
     Minutes
     Hours
@@ -155,4 +163,9 @@ enum HabitCategory {
     Productivity
     Education
     Financial
+}
+
+enum UserRole {
+    ADMIN
+    USER
 }

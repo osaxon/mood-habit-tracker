@@ -20,7 +20,10 @@ export const config = {
         logo: "/lotus-flower.png",
         colorScheme: "light",
     },
-
+    session: {
+        strategy: "jwt",
+    },
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         GitHub({
             clientId: process.env.AUTH_GITHUB_ID,
@@ -39,9 +42,20 @@ export const config = {
         }),
     ],
     callbacks: {
-        async session({ session, user, token }) {
-            session.user.id = user.id;
+        async session({ session, token }) {
+            if (token && session.user) {
+                session.user.id = token.id;
+                session.user.role = token.role;
+            }
             return session;
+        },
+
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.role = user.role;
+            }
+            return token;
         },
     },
 } satisfies NextAuthConfig;

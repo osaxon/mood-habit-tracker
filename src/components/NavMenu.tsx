@@ -16,6 +16,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
@@ -31,9 +32,9 @@ const UserMenu = ({ session }: { session: Session }) => {
     return (
         <div className="flex items-center gap-4">
             {pathname === "/" && (
-                <Link href="/dashboard">
-                    <Button variant="outline">Your Dashboard</Button>
-                </Link>
+                <Button variant="outline" asChild>
+                    <Link href="/dashboard">Your Dashboard</Link>
+                </Button>
             )}
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -54,23 +55,43 @@ const UserMenu = ({ session }: { session: Session }) => {
                     <DropdownMenuLabel className="font-normal">
                         <div className="flex flex-col space-y-1">
                             <p className="text-sm font-medium leading-none">
-                                {session.user.name}
+                                {session.user?.name}
                             </p>
                             <p className="text-xs leading-none text-muted-foreground">
-                                {session.user.email}
+                                {session.user?.email}
                             </p>
                         </div>
                     </DropdownMenuLabel>
-                    <DropdownMenuItem
+                    <DropdownMenuSeparator />
+                    <Button
+                        variant="ghost"
+                        asChild
+                        className="w-full"
                         onClick={() =>
                             signOut({
                                 callbackUrl: `${window.location.origin}`,
                             })
                         }
                     >
-                        Log out
-                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Log out
+                            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </Button>
+
+                    <DropdownMenuSeparator />
+                    {session.user?.role === "ADMIN" && (
+                        <DropdownMenuItem>
+                            <Button
+                                className="w-full"
+                                size="sm"
+                                asChild
+                                variant="destructive"
+                            >
+                                <Link href="/admin">Admin Panel</Link>
+                            </Button>
+                        </DropdownMenuItem>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
@@ -81,7 +102,7 @@ export default function NavMenu() {
     const { data: session } = useSession();
 
     return (
-        <header className="border-b border-muted-foreground w-full">
+        <header className="border-b border-muted w-full">
             <Container as="div" className="flex items-center justify-between">
                 <Link className="flex gap-2 items-center" href="/">
                     <Image

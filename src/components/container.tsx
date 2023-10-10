@@ -27,10 +27,11 @@ export default function Container({
     as = "div",
     className,
     height,
+    ...props
 }: ContainerProps) {
     return React.createElement(
         as,
-        { className: cn(containerVariants({ height }), className) },
+        { className: cn(containerVariants({ height }), className), ...props },
         children
     );
 }

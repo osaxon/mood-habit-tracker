@@ -20,8 +20,8 @@ export default async function UsersHabitCard({
     habitInstance: HabitInstanceWithRelations;
     userId: string;
 }) {
-    const { id, percentComplete, habitDefinition, expiresAt } = habitInstance;
-    const { habitName, targetValue, targetFreq, targetUnit } = habitDefinition;
+    const { id, habitDefinition } = habitInstance;
+    const { habitName, targetValue, targetFreq } = habitDefinition;
 
     const freqLabel =
         targetFreq === "Daily" ? "day" : targetFreq === "Weekly" ? "week" : "";

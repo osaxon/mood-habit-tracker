@@ -1,24 +1,27 @@
 import "next-auth/jwt";
 import "next-auth";
 import { JWT } from "next-auth/jwt";
-import NextAuth, { User, Session, DefaultSession } from "next-auth";
+import NextAuth, {
+    User,
+    Session,
+    DefaultSession,
+    DefaultUser,
+} from "next-auth";
+import { UserRole } from "@prisma/client";
 
 // Read more at: https://next-auth.js.org/getting-started/typescript#module-augmentation
 
-declare module "next-auth/jwt" {
-    /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
-    interface JWT {
-        /** The user's role. */
-        userRole?: string;
-    }
+interface IUser extends DefaultUser {
+    role?: UserRole;
 }
 
 declare module "next-auth" {
+    interface User extends IUser {}
     interface Session {
-        user: {
-            id: string;
-
-            role?: string;
-        } & DefaultSession["user"];
+        user?: User & DefaultSession["user"];
     }
+}
+
+declare module "next-auth/jwt" {
+    interface JWT extends IUser {}
 }
