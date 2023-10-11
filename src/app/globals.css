@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* Default ShadCN theme */
+/* @layer base {
     :root {
         --background: 0 0% 100%;
         --foreground: 240 10% 3.9%;
@@ -46,6 +47,53 @@
         --border: 240 3.7% 15.9%;
         --input: 240 3.7% 15.9%;
         --ring: 142.4 71.8% 29.2%;
+    }
+} */
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 133 65% 10%;
+        --card: 0 0% 100%;
+        --card-foreground: 133 65% 10%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 133 65% 10%;
+        --primary: 162 65% 55%;
+        --primary-foreground: 133 65% 10%;
+        --secondary: 193 66% 92%;
+        --secondary-foreground: 133 65% 10%;
+        --muted: 0 0% 20%;
+        --muted-foreground: 133 65% 70%;
+        --accent: 192 65% 52%;
+        --accent-foreground: 133 65% 10%;
+        --destructive: 0 85% 60%;
+        --destructive-foreground: 133 65% 10%;
+        --border: 0 0% 20%;
+        --input: 0 0% 20%;
+        --ring: 192 65% 40%;
+        --radius: 0.25rem;
+    }
+
+    .dark {
+        --background: 0 0% 0%;
+        --foreground: 133 65% 90%;
+        --card: 0 0% 0%;
+        --card-foreground: 133 65% 90%;
+        --popover: 0 0% 0%;
+        --popover-foreground: 133 65% 90%;
+        --primary: 162 65% 45%;
+        --primary-foreground: 0 0% 0%;
+        --secondary: 193 66% 8%;
+        --secondary-foreground: 133 65% 90%;
+        --muted: 0 0% 80%;
+        --muted-foreground: 133 65% 90%;
+        --accent: 192 65% 48%;
+        --accent-foreground: 0 0% 0%;
+        --destructive: 0 62% 30%;
+        --destructive-foreground: 133 65% 10%;
+        --border: 0 0% 60%;
+        --input: 0 0% 80%;
+        --ring: 192 65% 60%;
     }
 }
 

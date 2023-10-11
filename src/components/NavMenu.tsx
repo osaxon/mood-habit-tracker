@@ -1,4 +1,7 @@
 "use client";
+import { useTheme } from "next-themes";
+
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Space_Grotesk } from "next/font/google";
 import Image from "next/image";
@@ -41,9 +44,9 @@ const UserMenu = ({ session }: { session: Session }) => {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="relative border rounded-full"
+                        className="relative h-8 w-8 border rounded-full"
                     >
-                        <Avatar>
+                        <Avatar className="h-8 w-8">
                             <AvatarImage src={session.user?.image ?? ""} />
                             <AvatarFallback>
                                 {getUserInitials(session.user?.name ?? "")}
@@ -103,7 +106,11 @@ export default function NavMenu() {
 
     return (
         <header className="border-b border-muted w-full">
-            <Container as="div" className="flex items-center justify-between">
+            <Container
+                as="div"
+                width="wide"
+                className="flex items-center justify-between"
+            >
                 <Link className="flex gap-2 items-center" href="/">
                     <Image
                         alt="brand logo"
@@ -120,22 +127,45 @@ export default function NavMenu() {
                         {`Hab:It..`}
                     </p>
                 </Link>
-
-                {session && session.user ? (
-                    <UserMenu session={session} />
-                ) : (
-                    <Button
-                        onClick={() =>
-                            signIn(undefined, {
-                                callbackUrl: `${window.location.origin}/dashboard`,
-                            })
-                        }
-                        variant="default"
-                    >
-                        Log In
-                    </Button>
-                )}
+                <div className="flex items-center gap-2">
+                    <ul className="flex items-center gap-2">
+                        <Button asChild variant="link">
+                            <Link href="/">Docs</Link>
+                        </Button>
+                        <Button asChild variant="link">
+                            <Link href="/">Billing</Link>
+                        </Button>
+                    </ul>
+                    <ThemeToggle />
+                    {session && session.user ? (
+                        <UserMenu session={session} />
+                    ) : (
+                        <Button
+                            onClick={() =>
+                                signIn(undefined, {
+                                    callbackUrl: `${window.location.origin}/dashboard`,
+                                })
+                            }
+                            variant="default"
+                        >
+                            Log In
+                        </Button>
+                    )}
+                </div>
             </Container>
         </header>
+    );
+}
+
+function ThemeToggle() {
+    const { setTheme, theme } = useTheme();
+    return (
+        <Button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            size="icon"
+            variant="ghost"
+        >
+            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+        </Button>
     );
 }

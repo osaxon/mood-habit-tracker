@@ -4,15 +4,35 @@ import React from "react";
 
 // page height takes up remaining page space minus the header component i.e. 84px
 // TODO: Store header height size in config file
-const containerVariants = cva("max-w-5xl p-4 mx-auto w-full", {
+const containerVariants = cva("mx-auto w-full", {
     variants: {
         height: {
             default: "",
-            page: "min-h-[calc(100dvh-84px)]",
+            page: "min-h-[calc(100dvh-66px)]",
+        },
+        width: {
+            default: "max-w-5xl",
+            wide: "max-w-6xl",
+            narrow: "max-w-4xl",
+        },
+        paddingX: {
+            none: "",
+            sm: "px-2",
+            md: "px-4",
+            lg: "px-6",
+        },
+        paddingY: {
+            none: "",
+            sm: "py-2",
+            md: "py-4",
+            lg: "py-6",
         },
     },
     defaultVariants: {
         height: "default",
+        width: "default",
+        paddingX: "sm",
+        paddingY: "sm",
     },
 });
 
@@ -27,11 +47,15 @@ export default function Container({
     as = "div",
     className,
     height,
+    width,
     ...props
 }: ContainerProps) {
     return React.createElement(
         as,
-        { className: cn(containerVariants({ height }), className), ...props },
+        {
+            className: cn(containerVariants({ height, width }), className),
+            ...props,
+        },
         children
     );
 }

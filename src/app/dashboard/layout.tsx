@@ -13,7 +13,7 @@ export default async function DashboardLayout({
 }) {
     const session = await auth();
     return (
-        <Container as="section" height="page">
+        <Container as="section" width="wide" height="page">
             {children}
         </Container>
     );

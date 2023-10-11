@@ -8,14 +8,10 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export default async function Home() {
     return (
-        <div
-            style={{
-                backgroundImage: `url('/hhholographic.webp')`,
-                backgroundSize: "cover",
-            }}
-        >
+        <div>
             <Container
                 as="section"
+                width="narrow"
                 height="page"
                 className="flex flex-col items-stretch"
             >

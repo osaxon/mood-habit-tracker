@@ -72,7 +72,6 @@ export default function UserHabitCardContent({
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            {/* <ChartDataAccordian data={chartData} /> */}
         </div>
     );
 }

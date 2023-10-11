@@ -8,7 +8,7 @@ export default function RecordActivityModal({
 }) {
     return (
         <Dialog>
-            <Button asChild>
+            <Button variant="secondary" asChild>
                 <DialogTrigger>Record Activity Details</DialogTrigger>
             </Button>
             <DialogContent>{children}</DialogContent>

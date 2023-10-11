@@ -4,7 +4,7 @@ import type {
     NextApiResponse,
 } from "next";
 import type { NextAuthOptions as NextAuthConfig } from "next-auth";
-import { getServerSession } from "next-auth";
+import { getServerSession, type Session } from "next-auth";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
@@ -67,7 +67,7 @@ export function auth(
         | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
         | [NextApiRequest, NextApiResponse]
         | []
-) {
+): Promise<Session | null> {
     return getServerSession(...args, config);
 }
 
@@ -85,5 +85,12 @@ declare global {
             EMAIL_SERVER_PASSWORD: string;
             EMAIL_SERVER_USER: string;
         }
+    }
+}
+
+export class AuthenticationError extends Error {
+    constructor(message = "Authentication failed") {
+        super(message);
+        this.name = "AuthenticationError";
     }
 }

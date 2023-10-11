@@ -1,18 +1,20 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { auth } from "../../libs/authconfig";
+import { auth, AuthenticationError } from "../../libs/authconfig";
 import Dashboard from "./_components/dashboard";
 
 export default async function Page() {
     const session = await auth();
 
+    // Middleware handles redirects to sign in for unauthenticated or unauthorised users
+    // Errors with the session will throw an Error and re-direct to error.tsx
     if (!session || !session.user) {
-        redirect("/api/auth/signin");
+        throw new AuthenticationError();
     }
-    console.log(session);
-    const { user } = session;
-    const { id } = user;
+
+    const {
+        user: { id },
+    } = session;
 
     return (
         <div className="space-y-6">
@@ -29,5 +31,4 @@ export default async function Page() {
             <Dashboard userId={id} />
         </div>
     );
-    2;
 }

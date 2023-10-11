@@ -1,5 +1,6 @@
 import NavMenu from "@/components/NavMenu";
 import SessionProvider from "@/components/SessionProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
@@ -23,11 +24,17 @@ export default async function RootLayout({
         <html lang="en">
             <SessionProvider session={session}>
                 <body>
-                    <main>
-                        <NavMenu />
-                        {children}
-                    </main>
-                    <Toaster />
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        enableSystem
+                    >
+                        <main>
+                            <NavMenu />
+                            {children}
+                        </main>
+                        <Toaster />
+                    </ThemeProvider>
                 </body>
             </SessionProvider>
         </html>
