@@ -14,5 +14,11 @@ export const addHabitInstanceSchema = z.object({
     userId: z.string(),
 });
 
+export const authFormSchema = z.object({
+    email: z.string().email(),
+    csrfToken: z.string(),
+});
+
 export type AddHabitInstanceInputs = z.infer<typeof addHabitInstanceSchema>;
 export type AddHabitRecordInputs = z.infer<typeof addHabitRecordSchema>;
+export type AuthFormInputs = z.infer<typeof authFormSchema>;

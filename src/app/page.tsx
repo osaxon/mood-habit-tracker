@@ -30,7 +30,7 @@ export default async function Home() {
                     </p>
                     <div className="p-6">
                         <Button size="lg" asChild>
-                            <Link className="text-xl" href="/api/auth/signin">
+                            <Link className="text-xl" href="/auth/signup">
                                 Try Hab:It for Free
                             </Link>
                         </Button>

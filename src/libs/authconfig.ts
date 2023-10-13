@@ -57,6 +57,34 @@ export const config = {
             }
             return token;
         },
+
+        async signIn({ user, account, profile, email }) {
+            let isAllowedToSignIn = true;
+
+            // a profile only exists once a user has succesfully logged in
+            if (!profile && user.email) {
+                const invitation = await prisma.invitations.findFirst({
+                    where: { email: user.email, used: false },
+                });
+
+                // throw error if no invitation or if already used
+                if (!invitation || invitation.used) {
+                    isAllowedToSignIn = false;
+                }
+
+                // set the invitation status to used
+                await prisma.invitations.update({
+                    where: {
+                        token: invitation?.token,
+                    },
+                    data: {
+                        used: true,
+                    },
+                });
+            }
+
+            return isAllowedToSignIn;
+        },
     },
 } satisfies NextAuthConfig;
 

@@ -136,7 +136,9 @@ export default function NavMenu() {
                             <Link href="/">Billing</Link>
                         </Button>
                     </ul>
+
                     <ThemeToggle />
+
                     {session && session.user ? (
                         <UserMenu session={session} />
                     ) : (
@@ -146,7 +148,7 @@ export default function NavMenu() {
                                     callbackUrl: `${window.location.origin}/dashboard`,
                                 })
                             }
-                            variant="default"
+                            variant="secondary"
                         >
                             Log In
                         </Button>
@@ -163,7 +165,7 @@ function ThemeToggle() {
         <Button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             size="icon"
-            variant="ghost"
+            variant="secondary"
         >
             {theme === "dark" ? <MoonIcon /> : <SunIcon />}
         </Button>
