@@ -26,23 +26,25 @@ export default function HabitDefCard({
         habitDefinition;
 
     return (
-        <Card {...props}>
+        <Card className="flex flex-col justify-between" {...props}>
             <CardHeader>
                 <CardTitle>{habitName}</CardTitle>
-                <CardDescription>
+                <CardDescription className="text-secondary-foreground">
                     {duration} {durationUnit}
                 </CardDescription>
             </CardHeader>
-            <CardContent className="flex gap-2 items-end">
+
+            <CardContent className="flex gap-2 items-start">
                 <Image
                     width={80}
                     height={80}
                     alt=""
-                    className="opacity-25"
+                    className="opacity-40 bg-primary p-2 rounded"
                     src={`/habit-icons/${icon}`}
                 />
-                <p>{description}</p>
+                <p className="text-sm">{description}</p>
             </CardContent>
+
             <CardFooter>
                 {userSelected ? (
                     <Button variant="link" asChild>
