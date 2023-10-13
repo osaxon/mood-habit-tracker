@@ -11,6 +11,7 @@ import { PrismaClient } from "@prisma/client";
 
 import GitHub from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
+import async from "../app/auth/verify-request/page";
 
 const prisma = new PrismaClient();
 
@@ -60,7 +61,6 @@ export const config = {
 
         async signIn({ user, account, profile, email }) {
             let isAllowedToSignIn = true;
-
             // a profile only exists once a user has succesfully logged in
             if (!profile && user.email) {
                 const invitation = await prisma.invitations.findFirst({
@@ -71,8 +71,21 @@ export const config = {
                 if (!invitation || invitation.used) {
                     isAllowedToSignIn = false;
                 }
+            }
 
-                // set the invitation status to used
+            return isAllowedToSignIn;
+        },
+    },
+    events: {
+        async signIn({ user, isNewUser }) {
+            if (isNewUser && user.email) {
+                const invitation = await prisma.invitations.findFirst({
+                    where: {
+                        email: user.email,
+                        used: false,
+                    },
+                });
+
                 await prisma.invitations.update({
                     where: {
                         token: invitation?.token,
@@ -82,8 +95,6 @@ export const config = {
                     },
                 });
             }
-
-            return isAllowedToSignIn;
         },
     },
 } satisfies NextAuthConfig;
