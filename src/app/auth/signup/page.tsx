@@ -1,12 +1,10 @@
 import Container from "@/components/container";
 import { Authform } from "@/components/forms/auth-form";
 import SignInButton from "@/components/sign-in-button";
-import { GetServerSidePropsContext } from "next";
-import { getCsrfToken, getProviders } from "next-auth/react";
+import { getProviders } from "next-auth/react";
 
-export default async function SignUpPage(context: GetServerSidePropsContext) {
+export default async function SignUpPage() {
     const providers = await getProviders();
-    const csrfToken = await getCsrfToken(context);
 
     return (
         <Container height="page" width="wide">
@@ -15,13 +13,8 @@ export default async function SignUpPage(context: GetServerSidePropsContext) {
                 <ul className="flex flex-col items-center">
                     {providers &&
                         Object.values(providers).map((provider) => {
-                            if (provider.name === "Email" && csrfToken) {
-                                return (
-                                    <Authform
-                                        key={provider.id}
-                                        csrfToken={csrfToken}
-                                    />
-                                );
+                            if (provider.name === "Email") {
+                                return <Authform key={provider.id} />;
                             } else {
                                 return (
                                     <div key={provider.name} className="mb-3">

@@ -16,19 +16,12 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useToast } from "../ui/use-toast";
 
-interface AuthFormProps {
-    csrfToken: string;
-}
-
-export function Authform(props: AuthFormProps) {
+export function Authform() {
     const { toast } = useToast();
 
     const form = useForm<AuthFormInputs>({
         mode: "onSubmit",
         resolver: zodResolver(authFormSchema),
-        defaultValues: {
-            csrfToken: props.csrfToken,
-        },
     });
 
     async function onSubmit(data: AuthFormInputs) {
@@ -54,19 +47,6 @@ export function Authform(props: AuthFormProps) {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input type="string" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="csrfToken"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Token</FormLabel>
                             <FormControl>
                                 <Input type="string" {...field} />
                             </FormControl>
