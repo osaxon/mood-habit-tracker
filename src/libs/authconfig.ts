@@ -11,20 +11,27 @@ import { PrismaClient } from "@prisma/client";
 
 import GitHub from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
-import async from "../app/auth/verify-request/page";
 
 const prisma = new PrismaClient();
 
 export const config = {
     adapter: PrismaAdapter(prisma),
+
     theme: {
         logo: "/lotus-flower.png",
         colorScheme: "light",
     },
+
+    pages: {
+        newUser: "/auth/new-user",
+    },
+
     session: {
         strategy: "jwt",
     },
+
     secret: process.env.NEXTAUTH_SECRET,
+
     providers: [
         GitHub({
             clientId: process.env.AUTH_GITHUB_ID,
@@ -42,6 +49,7 @@ export const config = {
             from: process.env.EMAIL_FROM,
         }),
     ],
+
     callbacks: {
         async session({ session, token }) {
             if (token && session.user) {
@@ -61,14 +69,17 @@ export const config = {
 
         async signIn({ user, account, profile, email }) {
             let isAllowedToSignIn = true;
-            // a profile only exists once a user has succesfully logged in
-            if (!profile && user.email) {
+
+            // if the user doesn't have a role yet we can be sure this is the first time logging in
+            // a default 'user' role us assigned to all new users in the database when created by the prisma adapter
+            // in this case, we want to check if there's a valid invitation associated with the email signing in
+            if (!user.role && user.email) {
                 const invitation = await prisma.invitations.findFirst({
                     where: { email: user.email, used: false },
                 });
 
-                // throw error if no invitation or if already used
-                if (!invitation || invitation.used) {
+                // throw error if no invitation
+                if (!invitation) {
                     isAllowedToSignIn = false;
                 }
             }
@@ -76,6 +87,7 @@ export const config = {
             return isAllowedToSignIn;
         },
     },
+
     events: {
         async signIn({ user, isNewUser }) {
             if (isNewUser && user.email) {

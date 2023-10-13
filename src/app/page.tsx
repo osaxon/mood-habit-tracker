@@ -1,7 +1,6 @@
 import Container from "@/components/container";
-import { Button } from "@/components/ui/button";
+import SignInButton from "@/components/sign-in-button";
 import { Space_Grotesk } from "next/font/google";
-import Link from "next/link";
 import { cn } from "../libs/utils";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
@@ -29,11 +28,7 @@ export default async function Home() {
                         daily activities and realize your aspirations.
                     </p>
                     <div className="p-6">
-                        <Button size="lg" asChild>
-                            <Link className="text-xl" href="/auth/signup">
-                                Try Hab:It for Free
-                            </Link>
-                        </Button>
+                        <SignInButton label="Try for Free" />
                     </div>
                 </div>
             </Container>

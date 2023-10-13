@@ -7,6 +7,8 @@ import { prisma, xprisma } from "../libs/prisma";
 import {
     type AddHabitInstanceInputs,
     type AddHabitRecordInputs,
+    type UpdateUserRecordInputs,
+    updateUserRecord,
     addHabitRecordSchema,
 } from "../libs/formSchemas";
 import { revalidatePath } from "next/cache";
@@ -14,6 +16,7 @@ import {
     TargetFrequency,
     type HabitInstance,
     type UserHabitRecord,
+    User,
 } from "@prisma/client";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -107,7 +110,6 @@ export async function getUserDashboardData({
     userId: string;
 }): Promise<UserDashboardData> {
     let data: UserDashboardData | null;
-    console.log(userId);
 
     try {
         data = await prisma.user.findUnique({
@@ -144,7 +146,6 @@ export async function addHabitInstance(
     let data;
 
     try {
-        console.log("adding habit instance");
         data = await prisma.habitInstance.create({
             data: {
                 ...inputs,
@@ -152,7 +153,6 @@ export async function addHabitInstance(
             },
         });
         revalidatePath("/dashboard/habits");
-        console.log("successfully added");
     } catch (error) {
         throw new Error(getMessageFromError(error));
     }
@@ -184,8 +184,39 @@ export async function addHabitRecord(
                 value: Number(inputs.value),
             },
         });
-        console.log("successfully added record");
         revalidatePath("/dashboard");
+    } catch (error) {
+        throw new Error(getMessageFromError(error));
+    }
+
+    return {
+        success: true,
+        data,
+        error: undefined,
+    };
+}
+
+export async function updateUser(
+    inputs: UpdateUserRecordInputs
+): Promise<AddToDatabaseResponse<User>> {
+    const validatedInput = updateUserRecord.safeParse(inputs);
+    const { success } = validatedInput;
+
+    if (!success) {
+        throw new Error(getMessageFromError(validatedInput.error));
+    }
+
+    let data: User;
+
+    try {
+        data = await prisma.user.update({
+            where: {
+                id: inputs.id,
+            },
+            data: {
+                ...inputs.data,
+            },
+        });
     } catch (error) {
         throw new Error(getMessageFromError(error));
     }

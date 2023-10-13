@@ -25,12 +25,15 @@ import {
 } from "./ui/dropdown-menu";
 
 function getUserInitials(name: string) {
+    if (!name) return "XX";
     const [first, last] = name.split(" ");
     return `${first.charAt(0)}${last.charAt(0)}`;
 }
 
 const UserMenu = ({ session }: { session: Session }) => {
     const pathname = usePathname();
+
+    console.log(session);
 
     return (
         <div className="flex items-center gap-4">
@@ -103,6 +106,7 @@ const UserMenu = ({ session }: { session: Session }) => {
 
 export default function NavMenu() {
     const { data: session } = useSession();
+    console.log(session);
 
     return (
         <header className="border-b border-muted w-full">
