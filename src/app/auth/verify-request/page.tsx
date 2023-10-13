@@ -1,7 +1,6 @@
 import Container from "@/components/container";
-import { GetServerSidePropsContext } from "next";
 
-export default async function SignUpPage(context: GetServerSidePropsContext) {
+export default async function SignUpPage() {
     return (
         <Container height="page" width="wide">
             <p>Verify</p>
