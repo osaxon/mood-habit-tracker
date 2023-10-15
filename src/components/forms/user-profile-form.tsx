@@ -1,5 +1,5 @@
 "use client";
-import { updateUser } from "@/app/actions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -10,59 +10,41 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { NewUserFormInputs, newUserFormSchema } from "@/libs/formSchemas";
+import {
+    UpdateProfileInputs,
+    updateProfileFormSchema,
+} from "@/libs/formSchemas";
+import { getUserInitials } from "@/libs/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useToast } from "../ui/use-toast";
 
-interface NewUserFormProps {
-    id: string;
-    email: string;
-}
+export function UserProfileform({ session }: { session: Session }) {
+    const [isUploading, setIsUploading] = useState<boolean>(false);
+    const {
+        user: { name, id },
+    } = session;
 
-export function NewUserForm(props: NewUserFormProps) {
     const { toast } = useToast();
     const router = useRouter();
-    const form = useForm<NewUserFormInputs>({
+    const form = useForm<UpdateProfileInputs>({
         mode: "onSubmit",
-        resolver: zodResolver(newUserFormSchema),
-        defaultValues: {
-            email: props.email,
-        },
+        resolver: zodResolver(updateProfileFormSchema),
     });
 
-    async function onSubmit(data: NewUserFormInputs) {
-        // update user profile in DB and proceed to dashboard
-        const completePayload = {
-            id: props.id,
-            data,
-        };
-        const { success, error } = await updateUser(completePayload);
-
-        if (!success) {
-            toast({
-                variant: "destructive",
-                description: (
-                    <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-                        <code className="text-white">
-                            {JSON.stringify(data, null, 2)}
-                        </code>
-                    </pre>
-                ),
-            });
-        } else {
-            toast({
-                description: (
-                    <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-                        <code className="text-white">
-                            {JSON.stringify(data, null, 2)}
-                        </code>
-                    </pre>
-                ),
-            });
-            router.replace("/dashboard/habits");
-        }
+    async function onSubmit(data: UpdateProfileInputs) {
+        toast({
+            description: (
+                <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
+                    <code className="text-white">
+                        {JSON.stringify(data, null, 2)}
+                    </code>
+                </pre>
+            ),
+        });
     }
 
     return (
@@ -71,6 +53,11 @@ export function NewUserForm(props: NewUserFormProps) {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="relative sm:w-2/3 w-full space-y-8"
             >
+                <ProfileAvatar
+                    name={name ?? ""}
+                    image={session.user.image ?? ""}
+                />
+
                 <FormField
                     control={form.control}
                     name="email"
@@ -104,3 +91,13 @@ export function NewUserForm(props: NewUserFormProps) {
         </Form>
     );
 }
+
+const ProfileAvatar = ({ name, image }: { name: string; image: string }) => {
+    return (
+        <Avatar className="w-32 h-32">
+            <AvatarImage src={image} />
+
+            <AvatarFallback>{getUserInitials(name)}</AvatarFallback>
+        </Avatar>
+    );
+};

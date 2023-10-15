@@ -24,11 +24,7 @@ import {
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-function getUserInitials(name: string) {
-    if (!name) return "XX";
-    const [first, last] = name.split(" ");
-    return `${first.charAt(0)}${last.charAt(0)}`;
-}
+import { getUserInitials } from "@/libs/utils";
 
 const UserMenu = ({ session }: { session: Session }) => {
     const pathname = usePathname();
@@ -67,6 +63,10 @@ const UserMenu = ({ session }: { session: Session }) => {
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
+
+                    <Link href="/profile" className="w-full p-4">
+                        Profile
+                    </Link>
                     <Button
                         variant="ghost"
                         asChild

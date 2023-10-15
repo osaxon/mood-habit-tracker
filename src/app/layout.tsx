@@ -2,6 +2,7 @@ import NavMenu from "@/components/NavMenu";
 import SessionProvider from "@/components/SessionProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
+import "@uploadthing/react/styles.css";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { auth } from "../libs/authconfig";

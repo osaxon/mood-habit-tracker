@@ -9,7 +9,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     const habitDef = await getSingleHabitDef(id);
     const session = await auth();
     const userId = session?.user.id || "";
-    console.log(habitDef);
     return (
         <section className="@container bg-secondary p-4 w-full">
             <h2 className={cn("font-bold", spaceGrotesk.className)}>Add</h2>

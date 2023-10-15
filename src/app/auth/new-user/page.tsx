@@ -9,7 +9,6 @@ export default async function NewUserPage() {
     }
     const { user } = session;
     const { id } = user;
-    console.log(id);
 
     return (
         <Container width="narrow" height="page">

@@ -3,6 +3,7 @@ import {
     type UserDashboardData,
     type AddToDatabaseResponse,
 } from "@/types/prisma";
+import { UTApi } from "uploadthing/server";
 import { prisma, xprisma } from "../libs/prisma";
 import {
     type AddHabitInstanceInputs,
@@ -102,6 +103,26 @@ export async function getChartData(
 
     revalidatePath("/dashboard");
     return chartData;
+}
+
+const utapi = new UTApi();
+
+/**
+ * @see https://docs.uploadthing.com/api-reference/server#uploadfiles
+ */
+export async function uploadFiles(fd: FormData) {
+    const files = fd.getAll("files") as File[];
+    const uploadedFiles = await utapi.uploadFiles(files);
+    return uploadedFiles;
+}
+
+/**
+ * @see https://docs.uploadthing.com/api-reference/server#uploadfilesfromurl
+ */
+export async function uploadFromUrl(fd: FormData) {
+    const url = fd.get("url") as string;
+    const uploadedFile = await utapi.uploadFilesFromUrl(url);
+    return uploadedFile.data;
 }
 
 export async function getUserDashboardData({
@@ -226,4 +247,27 @@ export async function updateUser(
         data,
         error: undefined,
     };
+}
+
+export async function getUserData({ id }: { id: string }) {
+    const user = await prisma.user.findUnique({ where: { id } });
+    return user;
+}
+
+export async function updateProfileImage({
+    userId,
+    imgUrl,
+}: {
+    userId: string;
+    imgUrl: string;
+}) {
+    const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            image: imgUrl,
+        },
+    });
+    revalidatePath("/profile");
+
+    return updatedUser;
 }

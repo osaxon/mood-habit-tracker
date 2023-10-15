@@ -35,8 +35,15 @@ export const newUserFormSchema = z.object({
     email: z.string().email(),
 });
 
+export const updateProfileFormSchema = z.object({
+    name: z.string(),
+    email: z.string(),
+    image: z.string(),
+});
+
 export type AddHabitInstanceInputs = z.infer<typeof addHabitInstanceSchema>;
 export type AddHabitRecordInputs = z.infer<typeof addHabitRecordSchema>;
 export type AuthFormInputs = z.infer<typeof authFormSchema>;
 export type NewUserFormInputs = z.infer<typeof newUserFormSchema>;
 export type UpdateUserRecordInputs = z.infer<typeof updateUserRecord>;
+export type UpdateProfileInputs = z.infer<typeof updateProfileFormSchema>;

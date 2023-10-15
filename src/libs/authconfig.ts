@@ -51,25 +51,43 @@ export const config = {
     ],
 
     callbacks: {
-        async session({ session, token }) {
+        async session({ session, token, trigger }) {
             if (token && session.user) {
                 session.user.id = token.id;
                 session.user.role = token.role;
                 session.user.name = token.name;
+                session.user.image = token.image ?? token.picture;
+            }
+            if (trigger === "update") {
+                console.log("Update trigger", session);
             }
             return session;
         },
 
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger }) {
             if (user) {
                 token.id = user.id;
                 token.role = user.role;
                 token.name = user.name;
             }
+
+            if (trigger === "update") {
+                const user = await prisma.user.findUnique({
+                    where: { id: token.id },
+                });
+
+                if (user) {
+                    console.log(user, "<---- update trigger user obj");
+                    token.image = user?.image;
+                }
+            }
+
+            console.log("JWT callback", token);
+
             return token;
         },
 
-        async signIn({ user, account, profile, email }) {
+        async signIn({ user }) {
             let isAllowedToSignIn = true;
 
             // if the user doesn't have a role yet we can be sure this is the first time logging in
@@ -109,6 +127,9 @@ export const config = {
                     },
                 });
             }
+        },
+        async updateUser({ user }) {
+            console.log("update user event");
         },
     },
 } satisfies NextAuthConfig;
