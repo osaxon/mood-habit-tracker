@@ -33,10 +33,10 @@ export default function ProfileImage({ session }: { session: Session }) {
                     });
 
                     await update();
-                    router.refresh();
                     toast({
                         description: "Finished updating user record",
                     });
+                    router.refresh();
                 }}
                 endpoint="imageUploader"
             />

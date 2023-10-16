@@ -44,3 +44,34 @@ export const xprisma = prisma.$extends({
         },
     },
 });
+
+export function getExtendedClient() {
+    return prisma.$extends({
+        query: {
+            userHabitRecord: {
+                create: async ({ model, operation, args, query }) => {
+                    const { data } = args;
+                    let { createdDate } = data;
+
+                    if (!createdDate) {
+                        createdDate = dayjs(new Date()).startOf("day").toDate();
+                    } else {
+                        createdDate = dayjs(createdDate)
+                            .startOf("day")
+                            .toDate();
+                    }
+
+                    const habitRecord = await prisma.userHabitRecord.create({
+                        data: {
+                            ...data,
+                            createdDate: createdDate,
+                        },
+                    });
+                    return habitRecord;
+                },
+            },
+        },
+    });
+}
+
+export type ExtendedClient = ReturnType<typeof getExtendedClient>;

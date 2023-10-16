@@ -51,16 +51,14 @@ export const config = {
     ],
 
     callbacks: {
-        async session({ session, token, trigger }) {
+        async session({ session, token }) {
             if (token && session.user) {
                 session.user.id = token.id;
                 session.user.role = token.role;
                 session.user.name = token.name;
                 session.user.image = token.image ?? token.picture;
             }
-            if (trigger === "update") {
-                console.log("Update trigger", session);
-            }
+
             return session;
         },
 
@@ -71,13 +69,16 @@ export const config = {
                 token.name = user.name;
             }
 
+            // triggered from client with useSession hook
             if (trigger === "update") {
+                // the user obj is only available during sign in so we look up the user to get the updates from the db
                 const user = await prisma.user.findUnique({
                     where: { id: token.id },
                 });
 
+                // update the token
                 if (user) {
-                    console.log(user, "<---- update trigger user obj");
+                    // currently only updates to images are triggering a session token update so keep other propeerties the same
                     token.image = user?.image;
                 }
             }
@@ -127,9 +128,6 @@ export const config = {
                     },
                 });
             }
-        },
-        async updateUser({ user }) {
-            console.log("update user event");
         },
     },
 } satisfies NextAuthConfig;

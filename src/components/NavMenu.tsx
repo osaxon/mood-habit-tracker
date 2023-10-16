@@ -1,18 +1,16 @@
 "use client";
 import { useTheme } from "next-themes";
 
+import { cn } from "@/libs/utils";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { Session } from "next-auth";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Space_Grotesk } from "next/font/google";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
-
-import { cn } from "@/libs/utils";
-import { Session } from "next-auth";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Container from "./container";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
     DropdownMenu,
@@ -23,6 +21,7 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 import { getUserInitials } from "@/libs/utils";
 
@@ -32,7 +31,7 @@ const UserMenu = ({ session }: { session: Session }) => {
     return (
         <div className="flex items-center gap-4">
             {pathname === "/" && (
-                <Button variant="outline" asChild>
+                <Button className="hidden md:block" asChild>
                     <Link href="/dashboard">Your Dashboard</Link>
                 </Button>
             )}
@@ -64,25 +63,52 @@ const UserMenu = ({ session }: { session: Session }) => {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
-                    <Link href="/profile" className="w-full p-4">
-                        Profile
-                    </Link>
-                    <Button
-                        variant="ghost"
-                        asChild
-                        className="w-full"
-                        onClick={() =>
-                            signOut({
-                                callbackUrl: `${window.location.origin}`,
-                            })
-                        }
-                    >
-                        <DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Button className="w-full justify-start" asChild>
+                            <Link className="text-left" href="/profile">
+                                Dashboard
+                            </Link>
+                        </Button>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem asChild>
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start"
+                            asChild
+                        >
+                            <Link className="text-left" href="/profile">
+                                Profile
+                            </Link>
+                        </Button>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start"
+                            asChild
+                        >
+                            <Link className="text-left" href="/">
+                                Docs
+                            </Link>
+                        </Button>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                        <Button
+                            variant="ghost"
+                            className="w-full"
+                            onClick={() =>
+                                signOut({
+                                    callbackUrl: `${window.location.origin}`,
+                                })
+                            }
+                        >
                             Log out
                             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </Button>
-
+                        </Button>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {session.user?.role === "ADMIN" && (
                         <DropdownMenuItem>
@@ -129,17 +155,6 @@ export default function NavMenu() {
                     </p>
                 </Link>
                 <div className="flex items-center gap-2">
-                    <ul className="flex items-center gap-2">
-                        <Button asChild variant="link">
-                            <Link href="/">Docs</Link>
-                        </Button>
-                        <Button asChild variant="link">
-                            <Link href="/">Billing</Link>
-                        </Button>
-                    </ul>
-
-                    <ThemeToggle />
-
                     {session && session.user ? (
                         <UserMenu session={session} />
                     ) : (

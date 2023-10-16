@@ -11,17 +11,24 @@ import {
     type UpdateUserRecordInputs,
     updateUserRecord,
     addHabitRecordSchema,
+    CreateInviteInputs,
+    createInviteFormSchema,
 } from "../libs/formSchemas";
 import { revalidatePath } from "next/cache";
 import {
     TargetFrequency,
     type HabitInstance,
     type UserHabitRecord,
+    type Invitations,
     User,
 } from "@prisma/client";
+import { Resend } from "resend";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+import WelcomeEmail from "@/components/email-templates/welcome";
 dayjs.extend(advancedFormat);
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const getMessageFromError = (error: unknown) => {
     if (error instanceof Error) return error.message;
@@ -173,7 +180,7 @@ export async function addHabitInstance(
                 expiresAt: currentDate.toDate(),
             },
         });
-        revalidatePath("/dashboard/habits");
+        // revalidatePath("/dashboard/habits");
     } catch (error) {
         throw new Error(getMessageFromError(error));
     }
@@ -205,7 +212,7 @@ export async function addHabitRecord(
                 value: Number(inputs.value),
             },
         });
-        revalidatePath("/dashboard");
+        revalidatePath("/dashboard", "page");
     } catch (error) {
         throw new Error(getMessageFromError(error));
     }
@@ -267,7 +274,68 @@ export async function updateProfileImage({
             image: imgUrl,
         },
     });
+
     revalidatePath("/profile");
 
     return updatedUser;
+}
+
+export async function getInvitations(): Promise<Invitations[] | undefined> {
+    let invitations;
+    try {
+        invitations = await prisma.invitations.findMany({});
+        return invitations;
+    } catch (error) {
+        // throw
+    }
+
+    return invitations;
+}
+
+export async function createInvite(inputs: CreateInviteInputs) {
+    const validatedInput = createInviteFormSchema.safeParse(inputs);
+    const { success } = validatedInput;
+
+    if (!success) {
+        throw new Error(getMessageFromError(validatedInput.error));
+    }
+    let data;
+    try {
+        // the extended prisma client ensures the createdDate field is set for all new habit records
+        data = await prisma.invitations.create({
+            data: {
+                ...inputs,
+                expiry: dayjs(new Date())
+                    .startOf("day")
+                    .add(1, "month")
+                    .toDate(),
+                used: false,
+            },
+        });
+        await resend.emails.send({
+            from: "Habit Team <olisaxon@webjenga.com>",
+            to: [inputs.email],
+            subject: "You're invited!",
+            react: WelcomeEmail({ userFirstname: inputs.email }),
+        });
+        revalidatePath("/admin/invitations");
+    } catch (error) {
+        throw new Error(getMessageFromError(error));
+    }
+
+    return {
+        success: true,
+        data,
+        error: undefined,
+    };
+}
+
+export async function getUsers(): Promise<User[] | undefined> {
+    let users;
+    try {
+        users = await prisma.user.findMany();
+        return users;
+    } catch (error) {
+        // throw
+    }
 }

@@ -10,6 +10,7 @@ import {
     UsersIcon,
     type LucideIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface NavLinks {
@@ -21,17 +22,17 @@ interface NavLinks {
 const navLinks: NavLinks[] = [
     {
         label: "Dashboard",
-        href: "/",
+        href: "/admin",
         icon: LayoutDashboardIcon,
     },
     {
         label: "Users",
-        href: "/",
+        href: "/admin/users",
         icon: UsersIcon,
     },
     {
         label: "Invitations",
-        href: "/",
+        href: "/admin/invitations",
         icon: AtSignIcon,
     },
     {
@@ -68,9 +69,9 @@ export function SideBar() {
     return (
         <aside
             className={cn(
-                "admin-nav relative bg-secondary transition-all flex-col",
-                { "w-48": isOpen },
-                { "w-[31px]": !isOpen }
+                "admin-nav p-2 relative rounded-lg transition-all flex-col",
+                { "w-48 bg-primary/25": isOpen },
+                { "w-[31px] bg-primary/10": !isOpen }
             )}
         >
             <Button
@@ -89,14 +90,16 @@ export function SideBar() {
                 <ul className="flex flex-col">
                     {navLinks.map((link) => (
                         <li key={link.label}>
-                            <Button
-                                size="sm"
-                                className="w-full justify-start"
-                                variant="ghost"
-                            >
-                                <link.icon className="mr-2" />
-                                {link.label}
-                            </Button>
+                            <Link href={link.href}>
+                                <Button
+                                    size="sm"
+                                    className="w-full justify-start"
+                                    variant="ghost"
+                                >
+                                    <link.icon className="mr-2" />
+                                    {link.label}
+                                </Button>
+                            </Link>
                         </li>
                     ))}
                 </ul>
