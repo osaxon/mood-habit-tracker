@@ -28,7 +28,7 @@ export const WelcomeEmail = ({ userFirstname = "Zeno" }: WelcomeEmailProps) => (
         <Body style={main}>
             <Container style={container}>
                 <Img
-                    src={`/public/lotus-flower.png`}
+                    src={`${baseUrl}/lotus-flower.png`}
                     width="170"
                     height="50"
                     alt="Lotus flower logo"
