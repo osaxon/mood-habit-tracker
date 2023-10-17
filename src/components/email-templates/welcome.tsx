@@ -32,7 +32,7 @@ export const WelcomeEmail = ({ userFirstname = "Zeno" }: WelcomeEmailProps) => (
                 <Img
                     src={`${baseUrl}/lotus-flower.png`}
                     width="170"
-                    height="50"
+                    height="170"
                     alt="Lotus flower logo"
                     style={logo}
                 />
