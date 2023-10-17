@@ -26,6 +26,7 @@ import { Resend } from "resend";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import WelcomeEmail from "@/components/email-templates/welcome";
+
 dayjs.extend(advancedFormat);
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -338,4 +339,24 @@ export async function getUsers(): Promise<User[] | undefined> {
     } catch (error) {
         // throw
     }
+}
+
+interface DashboardDataResponse {
+    users: User[] | undefined;
+    invitations: Invitations[] | undefined;
+}
+
+export async function getAdminDashboardData(): Promise<DashboardDataResponse> {
+    let [users, invitations] = await Promise.all([
+        getUsers(),
+        getInvitations(),
+    ]);
+    console.log(users);
+    console.log(invitations);
+    const data = {
+        users,
+        invitations,
+    };
+    console.log(data);
+    return { users, invitations };
 }
