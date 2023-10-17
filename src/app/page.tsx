@@ -1,4 +1,5 @@
 import Container from "@/components/container";
+import WelcomeEmail from "@/components/email-templates/welcome";
 import SignInButton from "@/components/sign-in-button";
 import { Space_Grotesk } from "next/font/google";
 import { cn } from "../libs/utils";
@@ -30,6 +31,7 @@ export default async function Home() {
                     <SignInButton label="Try for Free" />
                 </div>
             </div>
+            <WelcomeEmail userFirstname="Oli" />
         </Container>
     );
 }

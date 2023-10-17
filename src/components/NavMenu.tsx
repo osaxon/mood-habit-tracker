@@ -169,6 +169,7 @@ export default function NavMenu() {
                             Log In
                         </Button>
                     )}
+                    <ThemeToggle />
                 </div>
             </Container>
         </header>

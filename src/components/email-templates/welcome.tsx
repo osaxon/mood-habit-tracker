@@ -19,6 +19,8 @@ const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "";
 
+console.log(baseUrl, "<----- base url");
+
 export const WelcomeEmail = ({ userFirstname = "Zeno" }: WelcomeEmailProps) => (
     <Html>
         <Head />
