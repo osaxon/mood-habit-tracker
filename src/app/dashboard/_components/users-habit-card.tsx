@@ -21,7 +21,7 @@ export default async function UsersHabitCard({
     userId: string;
 }) {
     const { id, habitDefinition } = habitInstance;
-    const { habitName, targetValue, targetFreq } = habitDefinition;
+    const { habitName, targetValue, targetFreq, targetUnit } = habitDefinition;
 
     const freqLabel =
         targetFreq === "Daily" ? "day" : targetFreq === "Weekly" ? "week" : "";
@@ -42,7 +42,11 @@ export default async function UsersHabitCard({
             </CardContent>
             <CardFooter className="gap-4">
                 <RecordActivityModal>
-                    <RecordAcivityForm userId={userId} habitInstanceId={id} />
+                    <RecordAcivityForm
+                        targetUnit={targetUnit}
+                        userId={userId}
+                        habitInstanceId={id}
+                    />
                 </RecordActivityModal>
             </CardFooter>
         </Card>

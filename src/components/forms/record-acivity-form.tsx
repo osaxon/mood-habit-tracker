@@ -22,6 +22,7 @@ import {
 } from "@/libs/formSchemas";
 import { cn } from "@/libs/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TargetUnit } from "@prisma/client";
 import { CalendarIcon, CheckCircledIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import dayjs from "dayjs";
@@ -39,9 +40,11 @@ interface HandleDateChangeProps {
 export function RecordAcivityForm({
     habitInstanceId,
     userId,
+    targetUnit,
 }: {
     habitInstanceId: string;
     userId: string;
+    targetUnit: TargetUnit;
 }) {
     const { toast } = useToast();
 
@@ -58,16 +61,6 @@ export function RecordAcivityForm({
     const currentValue = form.watch("value");
 
     async function onSubmit(data: AddHabitRecordInputs) {
-        // toast({
-        //     description: (
-        //         <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-        //             <code className="text-white">
-        //                 {JSON.stringify(data, null, 2)}
-        //             </code>
-        //         </pre>
-        //     ),
-        // });
-
         await addHabitRecord(data);
         dialogClose();
         toast({
@@ -105,111 +98,126 @@ export function RecordAcivityForm({
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="relative">
-                <FormField
-                    control={form.control}
-                    name="createdDate"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Date</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            type="button"
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-[240px] pl-3 text-left font-normal",
-                                                !field.value &&
-                                                    "text-muted-foreground"
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, "PPP")
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                >
-                                    <Calendar
-                                        initialFocus
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="relative space-y-6"
+            >
+                <div className="space-y-2">
+                    <FormField
+                        control={form.control}
+                        name="createdDate"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Date</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                type="button"
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    !field.value &&
+                                                        "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                    >
+                                        <Calendar
+                                            initialFocus
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <div className="flex gap-2">
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                            handleDateChange({
-                                action: "add",
-                                amount: 0,
-                            })
-                        }
-                    >
-                        Today
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                            handleDateChange({
-                                action: "subtract",
-                                amount: 1,
-                            })
-                        }
-                    >
-                        Yesterday
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                                handleDateChange({
+                                    action: "add",
+                                    amount: 0,
+                                })
+                            }
+                        >
+                            Today
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                                handleDateChange({
+                                    action: "subtract",
+                                    amount: 1,
+                                })
+                            }
+                        >
+                            Yesterday
+                        </Button>
+                    </div>
                 </div>
 
-                <FormField
-                    control={form.control}
-                    name="value"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Value</FormLabel>
-                            <FormControl>
-                                <Input type="number" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <div className="space-y-2">
+                    <FormField
+                        control={form.control}
+                        name="value"
+                        render={({ field }) => (
+                            <FormItem className="w-60">
+                                <FormLabel>{targetUnit}</FormLabel>
+                                <FormControl>
+                                    <Input type="number" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <div className="flex gap-2">
-                    <Button
-                        type="button"
-                        onClick={() => handleSetValue(5)}
-                        variant="ghost"
-                        size="sm"
-                    >
-                        +5
-                    </Button>
-                    <Button
-                        type="button"
-                        onClick={() => handleSetValue(10)}
-                        variant="ghost"
-                        size="sm"
-                    >
-                        +10
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button
+                            type="button"
+                            onClick={() => handleSetValue(1)}
+                            variant="ghost"
+                            size="sm"
+                        >
+                            +1
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => handleSetValue(5)}
+                            variant="ghost"
+                            size="sm"
+                        >
+                            +5
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => handleSetValue(10)}
+                            variant="ghost"
+                            size="sm"
+                        >
+                            +10
+                        </Button>
+                    </div>
                 </div>
 
                 <Button type="submit">Submit</Button>
