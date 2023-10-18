@@ -303,6 +303,7 @@ export async function createInvite(inputs: CreateInviteInputs) {
     let data;
     try {
         // the extended prisma client ensures the createdDate field is set for all new habit records
+        // TODO handle scenario where invite created in db but email failed to send
         data = await prisma.invitations.create({
             data: {
                 ...inputs,

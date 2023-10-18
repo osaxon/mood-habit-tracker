@@ -1,4 +1,3 @@
-"use client";
 import {
     Body,
     Button,
@@ -11,7 +10,6 @@ import {
     Section,
     Text,
 } from "@react-email/components";
-import { Tailwind } from "@react-email/tailwind";
 
 interface WelcomeEmailProps {
     userFirstname: string;
@@ -29,38 +27,36 @@ export const WelcomeEmail = ({ userFirstname = "Zeno" }: WelcomeEmailProps) => (
         <Preview>
             The habit tracking service that helps achieve your goals.
         </Preview>
-        <Tailwind>
-            <Body style={main}>
-                <Container style={container}>
-                    <Img
-                        src={`${baseUrl}/lotus-flower.png`}
-                        width="170"
-                        height="170"
-                        alt="Lotus flower logo"
-                        style={logo}
-                    />
-                    <Text style={paragraph}>Hi {userFirstname},</Text>
-                    <Text style={paragraph}>
-                        You&apos;ve been invited to join Hab:It as an early
-                        adopter. Click the link below to log in.
-                    </Text>
-                    <Section style={btnContainer}>
-                        <Button
-                            className="px-4 py-3 cursor-pointer rounded bg-emerald-500 text-2xl"
-                            href={baseUrl}
-                        >
-                            Sign Up
-                        </Button>
-                    </Section>
-                    <Text style={paragraph}>
-                        Best,
-                        <br />
-                        The Hab:It team
-                    </Text>
-                    <Hr style={hr} />
-                </Container>
-            </Body>
-        </Tailwind>
+        <Body style={main}>
+            <Container style={container}>
+                <Img
+                    src={`${baseUrl}/lotus-flower.png`}
+                    width="170"
+                    height="170"
+                    alt="Lotus flower logo"
+                    style={logo}
+                />
+                <Text style={paragraph}>Hi {userFirstname},</Text>
+                <Text style={paragraph}>
+                    You&apos;ve been invited to join Hab:It as an early adopter.
+                    Click the link below to log in.
+                </Text>
+                <Section style={btnContainer}>
+                    <Button
+                        className="px-4 py-3 cursor-pointer rounded bg-emerald-500 text-2xl"
+                        href={baseUrl}
+                    >
+                        Sign Up
+                    </Button>
+                </Section>
+                <Text style={paragraph}>
+                    Best,
+                    <br />
+                    The Hab:It team
+                </Text>
+                <Hr style={hr} />
+            </Container>
+        </Body>
     </Html>
 );
 
