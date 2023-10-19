@@ -38,18 +38,16 @@ export default function ProfileImage({ session }: { session: Session }) {
 
     return (
         <div className="space-y-6">
-            {session.user.image && (
-                <Avatar className="h-32 w-32 relative">
-                    {loading === true && (
-                        <LoaderIcon className="absolute text-accent-foreground w-10 h-10 animate-spin  top-[34%] left-[34%]" />
-                    )}
-                    <AvatarImage src={session.user?.image ?? ""} />
+            <Avatar className="h-32 w-32 relative">
+                {loading === true && (
+                    <LoaderIcon className="absolute text-accent-foreground w-10 h-10 animate-spin  top-[34%] left-[34%]" />
+                )}
+                <AvatarImage src={session.user?.image ?? ""} />
 
-                    <AvatarFallback>
-                        {getUserInitials(session.user?.name ?? "")}
-                    </AvatarFallback>
-                </Avatar>
-            )}
+                <AvatarFallback className="bg-accent/50 text-2xl">
+                    {getUserInitials(session.user?.name ?? "")}
+                </AvatarFallback>
+            </Avatar>
 
             <label
                 className="text-sm cursor-pointer text-accent-foreground"
@@ -68,25 +66,6 @@ export default function ProfileImage({ session }: { session: Session }) {
                     await startUpload([file]);
                 }}
             />
-
-            {/* <UploadButton
-                onUploadBegin={() => toast({ description: "upload began" })}
-                onClientUploadComplete={async (res) => {
-                    if (!res) throw new Error("failed to upload image");
-
-                    await updateProfileImage({
-                        userId: session.user.id,
-                        imgUrl: res[0].url,
-                    });
-
-                    await update();
-                    toast({
-                        description: "Finished updating user record",
-                    });
-                    router.refresh();
-                }}
-                endpoint="imageUploader"
-            /> */}
         </div>
     );
 }

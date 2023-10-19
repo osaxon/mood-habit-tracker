@@ -44,7 +44,7 @@ export const WelcomeEmail = ({ userFirstname = "Zeno" }: WelcomeEmailProps) => (
                 <Section style={btnContainer}>
                     <Button
                         className="px-4 py-3 cursor-pointer rounded bg-emerald-500 text-2xl"
-                        href={baseUrl}
+                        href={`${baseUrl}/api/auth/sign-up`}
                     >
                         Sign Up
                     </Button>
