@@ -314,12 +314,7 @@ export async function createInvite(inputs: CreateInviteInputs) {
                 used: false,
             },
         });
-        await resend.emails.send({
-            from: "Habit Team <olisaxon@webjenga.com>",
-            to: [inputs.email],
-            subject: "You're invited!",
-            react: WelcomeEmail({ userFirstname: inputs.email }),
-        });
+        await sendInviteEmail(inputs);
         revalidatePath("/admin/invitations");
     } catch (error) {
         throw new Error(getMessageFromError(error));
@@ -330,6 +325,15 @@ export async function createInvite(inputs: CreateInviteInputs) {
         data,
         error: undefined,
     };
+}
+
+export async function sendInviteEmail(inputs: CreateInviteInputs) {
+    await resend.emails.send({
+        from: "Habit Team <olisaxon@webjenga.com>",
+        to: [inputs.email],
+        subject: "You're invited!",
+        react: WelcomeEmail({ userFirstname: inputs.email }),
+    });
 }
 
 export async function getUsers(): Promise<User[] | undefined> {
