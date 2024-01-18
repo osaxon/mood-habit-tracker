@@ -356,12 +356,9 @@ export async function getAdminDashboardData(): Promise<DashboardDataResponse> {
         getUsers(),
         getInvitations(),
     ]);
-    console.log(users);
-    console.log(invitations);
     const data = {
         users,
         invitations,
     };
-    console.log(data);
     return { users, invitations };
 }

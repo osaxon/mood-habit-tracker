@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ActivityIcon } from "lucide-react";
 export default function RecordActivityModal({
     children,
 }: {
@@ -8,8 +9,11 @@ export default function RecordActivityModal({
 }) {
     return (
         <Dialog>
-            <Button variant="secondary" asChild>
-                <DialogTrigger>Record Activity Details</DialogTrigger>
+            <Button asChild>
+                <DialogTrigger>
+                    <ActivityIcon />
+                    Add Data
+                </DialogTrigger>
             </Button>
             <DialogContent>{children}</DialogContent>
         </Dialog>

@@ -9,6 +9,7 @@ import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "./ui/button";
 
 export default function ProfileImage({ session }: { session: Session }) {
     const [loading, setLoading] = useState<boolean>(false);
@@ -38,7 +39,7 @@ export default function ProfileImage({ session }: { session: Session }) {
 
     return (
         <div className="space-y-6">
-            <Avatar className="h-32 w-32 relative">
+            <Avatar className="h-40 w-40 relative">
                 {loading === true && (
                     <LoaderIcon className="absolute text-accent-foreground w-10 h-10 animate-spin  top-[34%] left-[34%]" />
                 )}
@@ -49,12 +50,9 @@ export default function ProfileImage({ session }: { session: Session }) {
                 </AvatarFallback>
             </Avatar>
 
-            <label
-                className="text-sm cursor-pointer text-accent-foreground"
-                htmlFor="img-upload"
-            >
-                Edit Img
-            </label>
+            <Button asChild variant="outline" size="sm">
+                <label htmlFor="img-upload">Edit Img</label>
+            </Button>
 
             <input
                 type="file"

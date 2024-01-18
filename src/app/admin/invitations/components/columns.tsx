@@ -11,6 +11,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { Invitations } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
 import { MoreHorizontal } from "lucide-react";
 
 const sendToast = (data: any) => {
@@ -31,6 +32,9 @@ export const columns: ColumnDef<Invitations>[] = [
     {
         accessorKey: "expiry",
         header: "Expires",
+        cell: ({ row }) => (
+            <div>{dayjs(row.getValue("expires")).format("DD MMM YY")}</div>
+        ),
     },
     {
         accessorKey: "used",

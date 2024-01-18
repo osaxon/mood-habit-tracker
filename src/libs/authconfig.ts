@@ -51,17 +51,6 @@ export const config = {
     ],
 
     callbacks: {
-        async session({ session, token }) {
-            if (token && session.user) {
-                session.user.id = token.id;
-                session.user.role = token.role;
-                session.user.name = token.name;
-                session.user.image = token.image ?? token.picture;
-            }
-
-            return session;
-        },
-
         async jwt({ token, user, trigger }) {
             if (user) {
                 token.id = user.id;
@@ -78,14 +67,23 @@ export const config = {
 
                 // update the token
                 if (user) {
-                    // currently only updates to images are triggering a session token update so keep other propeerties the same
                     token.image = user?.image;
+                    // other properties updates...
                 }
             }
 
-            console.log("JWT callback", token);
-
             return token;
+        },
+
+        async session({ session, token }) {
+            if (token && session.user) {
+                session.user.id = token.id;
+                session.user.role = token.role;
+                session.user.name = token.name;
+                session.user.image = token.image ?? token.picture;
+            }
+
+            return session;
         },
 
         async signIn({ user }) {
@@ -100,9 +98,10 @@ export const config = {
                 });
 
                 // throw error if no invitation
-                if (!invitation) {
-                    isAllowedToSignIn = false;
-                }
+                // TODO - uncomment this when we have invitations
+                // if (!invitation) {
+                //     isAllowedToSignIn = false;
+                // }
             }
 
             return isAllowedToSignIn;

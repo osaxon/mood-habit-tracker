@@ -65,7 +65,7 @@ const UserMenu = ({ session }: { session: Session }) => {
 
                     <DropdownMenuItem asChild>
                         <Button className="w-full justify-start" asChild>
-                            <Link className="text-left" href="/profile">
+                            <Link className="text-left" href="/dashboard">
                                 Dashboard
                             </Link>
                         </Button>
@@ -132,7 +132,7 @@ export default function NavMenu() {
     const { data: session } = useSession();
 
     return (
-        <header className="border-b border-muted w-full">
+        <header className="border-b w-full">
             <Container
                 as="div"
                 width="wide"
@@ -182,9 +182,14 @@ function ThemeToggle() {
         <Button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             size="icon"
-            variant="secondary"
+            variant="ghost"
+            className="hover:bg-card"
         >
-            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+            {theme === "dark" ? (
+                <MoonIcon className="text-input" />
+            ) : (
+                <SunIcon className="text-input" />
+            )}
         </Button>
     );
 }

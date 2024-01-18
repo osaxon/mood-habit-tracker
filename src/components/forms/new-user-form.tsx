@@ -99,7 +99,7 @@ export function NewUserForm(props: NewUserFormProps) {
                     )}
                 />
 
-                <Button type="submit">Submit</Button>
+                <Button type="submit">Save</Button>
             </form>
         </Form>
     );
