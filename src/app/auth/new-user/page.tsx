@@ -1,5 +1,5 @@
 import Container from "@/components/container";
-import { NewUserForm } from "@/components/forms/new-user-form";
+import { UserProfileform } from "@/components/forms/user-profile-form";
 import ProfileImage from "@/components/profile-image";
 import { AuthenticationError, auth } from "@/libs/authconfig";
 
@@ -17,7 +17,7 @@ export default async function NewUserPage() {
             <section className="space-y-8">
                 <ProfileImage session={session} />
 
-                <NewUserForm email={user.email ?? ""} id={id} />
+                <UserProfileform session={session} />
             </section>
         </Container>
     );

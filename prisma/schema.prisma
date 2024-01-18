@@ -1,171 +1,155 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider     = "mysql"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([provider, providerAccountId])
-    @@index([userId])
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([userId])
+  @@index([userId])
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    role          UserRole  @default(USER)
-
-    // the habits selected by a user to track on their profile
-    habitInstances HabitInstance[]
-
-    // the individual activity records
-    habitRecords UserHabitRecord[]
+  id             String            @id @default(cuid())
+  name           String?
+  email          String?           @unique
+  emailVerified  DateTime?
+  image          String?
+  role           UserRole          @default(USER)
+  accounts       Account[]
+  sessions       Session[]
+  habitInstances HabitInstance[]
+  habitRecords   UserHabitRecord[]
 }
 
-// Pre-defined Habits for users to select
 model HabitDefinition {
-    id             String          @id @default(cuid())
-    habitName      String
-    description    String?
-    targetUnit     TargetUnit
-    targetFreq     TargetFrequency @default(Daily)
-    direction      Direction       @default(None)
-    category       HabitCategory   @default(Lifestyle)
-    icon           String?
-    targetValue    Float
-    duration       Int             @default(2)
-    durationUnit   DurationUnit    @default(week)
-    createdAt      DateTime        @default(now())
-    habitInstances HabitInstance[]
+  id             String          @id @default(cuid())
+  habitName      String
+  description    String?
+  targetUnit     TargetUnit
+  targetFreq     TargetFrequency @default(Daily)
+  direction      Direction       @default(None)
+  category       HabitCategory   @default(Lifestyle)
+  icon           String?
+  targetValue    Float
+  duration       Int             @default(2)
+  durationUnit   DurationUnit    @default(week)
+  createdAt      DateTime        @default(now())
+  habitInstances HabitInstance[]
 }
 
-// One of these will be created when a user selects a habit
 model HabitInstance {
-    id                String          @id @default(cuid())
-    active            Boolean         @default(true)
-    habitDefinition   HabitDefinition @relation(fields: [habitDefinitionId], references: [id])
-    habitDefinitionId String
-    userId            String
-    user              User            @relation(fields: [userId], references: [id])
+  id                String            @id @default(cuid())
+  active            Boolean           @default(true)
+  habitDefinitionId String
+  userId            String
+  completed         Boolean           @default(false)
+  completedAt       DateTime?
+  expiresAt         DateTime?
+  percentComplete   Float             @default(0)
+  habitDefinition   HabitDefinition   @relation(fields: [habitDefinitionId], references: [id])
+  user              User              @relation(fields: [userId], references: [id])
+  records           UserHabitRecord[]
 
-    completed       Boolean   @default(false)
-    completedAt     DateTime?
-    expiresAt       DateTime?
-    percentComplete Float     @default(0)
-
-    records UserHabitRecord[]
-
-    @@index([userId])
-    @@index([habitDefinitionId])
+  @@index([userId])
+  @@index([habitDefinitionId])
 }
 
-// The activity log for users habits
 model UserHabitRecord {
-    id    String @id @default(cuid())
-    value Float
+  id              String        @id @default(cuid())
+  value           Float
+  habitInstanceId String
+  userId          String
+  createdAt       DateTime?     @default(now())
+  createdDate     DateTime?
+  habit           HabitInstance @relation(fields: [habitInstanceId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
 
-    habitInstanceId String
-    habit           HabitInstance @relation(fields: [habitInstanceId], references: [id])
-
-    userId String
-    user   User   @relation(fields: [userId], references: [id])
-
-    createdAt   DateTime? @default(now())
-    createdDate DateTime?
-
-    @@index([userId])
-    @@index([habitInstanceId])
+  @@index([userId])
+  @@index([habitInstanceId])
 }
 
 model Invitations {
-    token  String   @id @default(cuid())
-    email  String
-    expiry DateTime
-    used   Boolean
+  token  String   @id @default(cuid())
+  email  String
+  expiry DateTime
+  used   Boolean
 }
 
 enum TargetUnit {
-    Minutes
-    Hours
-    Days
-    Litres
-    Number
+  Minutes
+  Hours
+  Days
+  Litres
+  Number
 }
 
 enum DurationUnit {
-    day
-    week
-    month
-    year
+  day
+  week
+  month
+  year
 }
 
 enum TargetFrequency {
-    Daily
-    Weekly
-    Monthly
-    Annually
+  Daily
+  Weekly
+  Monthly
+  Annually
 }
 
 enum Direction {
-    Up
-    Down
-    None
+  Up
+  Down
+  None
 }
 
 enum HabitCategory {
-    Lifestyle
-    Diet
-    Exercise
-    Productivity
-    Education
-    Financial
+  Lifestyle
+  Diet
+  Exercise
+  Productivity
+  Education
+  Financial
 }
 
 enum UserRole {
-    ADMIN
-    USER
+  ADMIN
+  USER
 }
