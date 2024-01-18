@@ -1,22 +1,35 @@
-## Getting Started
+# Mood Habit Tracker
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A habit tracking application built with Next.JS, Auth.JS and Prisma.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[Live Demo](https://mood-habit-tracker.vercel.app/)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Features
 
-## Learn More
+- 🔐 **Auth**: Role based auth provided by AuthJS and the Prisma Adapter
+- ⚛️ **Server Components**: React Server Components used to fetch data server side
+- 🪣 **Image upload**: Users can change their profile picture which is securely stored in AWS S3 bucket via UploadThing
+- 📊 **Dashboards**: Responsive dashboard for users administrators
+- 📧 **Emails**: Email link with login for new users
 
-To learn more about Next.js, take a look at the following resources:
+## Pre-requisites
 
--   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
--   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.JS v18 or higher.
+- MySQL database URL. This can be hosted or a local development server.
+- SendGrid developer account. For sending the automated emails from Auth.JS
+- GitHub OAuth credentials. Or other preferred OAuth provider (See AuthJS docs for supported providers)
+- Uploadthing API access for image upload.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Installation
 
-## Deploy on Vercel
+```bash
+npm run install
+npm run db-push
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To run launch the Prisma Studio:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+npm run db-start
+```
+
