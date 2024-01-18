@@ -33,6 +33,10 @@ export function UserProfileform({ session }: { session: Session }) {
     const form = useForm<UpdateProfileInputs>({
         mode: "onSubmit",
         resolver: zodResolver(updateProfileFormSchema),
+        defaultValues: {
+            email: session.user.email ?? "",
+            name: session.user.name ?? "",
+        },
     });
 
     async function onSubmit(data: UpdateProfileInputs) {
