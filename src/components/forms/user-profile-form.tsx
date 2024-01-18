@@ -1,4 +1,5 @@
 "use client";
+import { updateNewUser } from "@/app/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +28,7 @@ export function UserProfileform({ session }: { session: Session }) {
     const {
         user: { name, id },
     } = session;
+    console.log(session);
 
     const { toast } = useToast();
     const router = useRouter();
@@ -36,19 +38,16 @@ export function UserProfileform({ session }: { session: Session }) {
         defaultValues: {
             email: session.user.email ?? "",
             name: session.user.name ?? "",
+            image: session.user.image ?? "",
         },
     });
 
     async function onSubmit(data: UpdateProfileInputs) {
-        toast({
-            description: (
-                <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                        {JSON.stringify(data, null, 2)}
-                    </code>
-                </pre>
-            ),
-        });
+        const updatedUser = await updateNewUser({ userId: id, ...data });
+        console.log(updatedUser);
+        console.log(id);
+        toast({ variant: "success", title: "Profile updated" });
+        router.push("/dashboard/habits");
     }
 
     return (

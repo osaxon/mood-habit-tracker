@@ -61,13 +61,16 @@ export const config = {
             // triggered from client with useSession hook
             if (trigger === "update") {
                 // the user obj is only available during sign in so we look up the user to get the updates from the db
+                console.log("updating user token");
                 const user = await prisma.user.findUnique({
                     where: { id: token.id },
                 });
 
                 // update the token
                 if (user) {
+                    console.log("updating token properties");
                     token.image = user?.image;
+                    token.name = user?.name;
                     // other properties updates...
                 }
             }

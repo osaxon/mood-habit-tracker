@@ -362,3 +362,31 @@ export async function getAdminDashboardData(): Promise<DashboardDataResponse> {
     };
     return { users, invitations };
 }
+
+export async function sayHello() {
+    console.log("hello");
+    return "hello";
+}
+
+export async function updateNewUser(data: {
+    userId: string;
+    name: string;
+    image: string;
+}) {
+    try {
+        console.log(data.userId);
+        const updatedUser = await prisma.user.update({
+            where: { id: data.userId },
+            data: {
+                image: data.image,
+                name: data.name,
+            },
+        });
+        console.log(updatedUser);
+        revalidatePath("/auth/new-user");
+        return updatedUser;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Error updating user");
+    }
+}
